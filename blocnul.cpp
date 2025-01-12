@@ -2,13 +2,9 @@
 
 
 
-BlocNul::BlocNul() {
-    m_couleur = "#dbdada";
-    m_type = 1;
+BlocNul::BlocNul(QColor couleur, int type, int x, int y):Bloc(couleur, type, x, y) {
 }
 
-void BlocNul::dessiner(QPainter *p, int x, int y) {
-    p->setPen(QPen(QColor("#7c7c7c"), s_epCrayon));
-    p->drawRect(x, y, s_tailleBloc, s_tailleBloc);
-    p->fillRect(x + s_epCrayon, y + s_epCrayon, s_tailleBloc - s_epCrayon, s_tailleBloc - s_epCrayon, QBrush(m_couleur));
+void BlocNul::dessiner(QPainter *p) {
+    p->fillRect(m_x, m_y, s_tailleBloc, s_tailleBloc, QBrush(m_couleur));
 }

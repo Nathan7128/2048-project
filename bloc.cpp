@@ -2,14 +2,15 @@
 
 
 
-int Bloc::s_epCrayon = 1;
-int Bloc::s_tailleBloc = 15;
+int Bloc::s_tailleBloc = 30;
 
-Bloc::Bloc() {
-    m_type = 0;
-    m_couleur = "";
+Bloc::Bloc(QColor couleur, int type, int x, int y) {
+    m_couleur = couleur;
+    m_type = type;
+    m_x = x;
+    m_y = y;
 }
 
-QColor Bloc::get_couleur() {
-    return m_couleur;
+void Bloc::setTailleBloc(int tailleBloc) {
+    s_tailleBloc = tailleBloc;
 }

@@ -13,8 +13,8 @@ class BlocNul : public Bloc
 {
     // Méthodes publiques
 public :
-    BlocNul(); /* Constructeur par défaut : on attribue par défaut le type 1 aux blocs nuls et la couleur grise */
-    void dessiner(QPainter *p, int x, int y); /* Dessine le bloc nul dans la grille */
+    BlocNul(QColor couleur = "#dbdada", int type = 1, int x = 0, int y = 0); /* Constructeur par défaut : on attribue par défaut le type 1 aux blocs nuls et la couleur grise */
+    void dessiner(QPainter *p); /* Dessine le bloc nul dans la grille */
 };
 
 

@@ -2,8 +2,9 @@
 
 
 
-BlocNumerote::BlocNumerote(int valeur) {
-    m_type = 2;
+int BlocNumerote::s_epCrayonTexte = 1;
+
+BlocNumerote::BlocNumerote(QColor couleur, int type, int x, int y, int valeur):Bloc(couleur, type, x, y) {
     m_valeur = valeur;
 
     // Attribution de la couleur du bloc à l'aide d'un switch en fonction de la valeur
@@ -46,13 +47,11 @@ BlocNumerote::BlocNumerote(int valeur) {
     }
 }
 
-void BlocNumerote::dessiner(QPainter *p, int x, int y) {
-    p->setPen(QPen(QColor("#7c7c7c"), s_epCrayon));
-    p->drawRect(x, y, s_tailleBloc, s_tailleBloc);
-    p->fillRect(x + s_epCrayon, y + s_epCrayon, s_tailleBloc - s_epCrayon, s_tailleBloc - s_epCrayon, QBrush(m_couleur));
-    p->setPen(QPen(QColor("#000000"), s_epCrayon));
+void BlocNumerote::dessiner(QPainter *p) {
+    p->fillRect(m_x, m_y, s_tailleBloc, s_tailleBloc, QBrush(m_couleur));
+    p->setPen(QPen(QColor("#000000"), s_epCrayonTexte));
     p->setFont(QFont("Arial", 16));
-    p->drawText(10, 30, QString::number(m_valeur));
+    p->drawText(m_x + 20, m_y + 20, QString::number(m_valeur));
 }
 
 int BlocNumerote::getValeur() {
