@@ -2,15 +2,10 @@
 
 
 
-int Bloc::s_tailleBloc = 30;
-
-Bloc::Bloc(QColor couleur, int type, int x, int y) {
-    m_couleur = couleur;
-    m_type = type;
+Bloc::Bloc(QColor couleur, int type, int x, int y, int tailleBloc) {
+    m_couleur = "#ffffff";
+    m_type = 0;
     m_x = x;
     m_y = y;
-}
-
-void Bloc::setTailleBloc(int tailleBloc) {
-    s_tailleBloc = tailleBloc;
+    m_tailleBloc = tailleBloc;
 }
