@@ -2,17 +2,23 @@
 
 
 
-Grille::Grille(int taille) {
-    m_taille = taille;
-    m_nbBloc = 0;
-    m_matBloc = new Bloc * *[taille];
+Grille::Grille(int x, int y, int hauteurGrille, int largeurGrille, int tailleGrille) {
+    m_nbBlocs = 0;
+    m_x = x;
+    m_y = y;
+    m_hauteurGrille = hauteurGrille;
+    m_largeurGrille = largeurGrille;
+    m_tailleGrille = tailleGrille;
+    m_epCountour = 3;
 
-    BlocNul* bloc_nul;
-    for (int i = 0; i < taille; i++) {
-        m_matBloc[i] = new Bloc * [taille];
-        for (int j = 0; j < taille; j++) {
-            bloc_nul = new BlocNul();
-            m_matBloc[i][j] = bloc_nul;
-        }
+    m_matBlocs = new Bloc * *[tailleGrille];
+    for (int i = 0; i < tailleGrille; i++) {
+        m_matBlocs[i] = new Bloc * [tailleGrille];
     }
+}
+
+BlocNumerote* Grille::nouveauBlocNum(int i, int j, int valeur) {
+    int x = i * (m_tailleBlocs + m_epCountour) + m_epCountour, y = j * (m_tailleBlocs + m_epCountour) + m_epCountour;
+    BlocNumerote * bloc = new BlocNumerote(x, y, valeur, m_tailleBlocs);
+    return bloc;
 }
