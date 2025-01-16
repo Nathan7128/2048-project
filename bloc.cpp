@@ -2,6 +2,10 @@
 
 
 
+int Bloc::getType() {
+    return m_type;
+}
+
 Bloc::Bloc(QColor couleur, int type, int x, int y, int tailleBloc) {
     m_couleur = "#ffffff";
     m_type = 0;

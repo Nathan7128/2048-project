@@ -28,13 +28,12 @@ protected :
     // Déclaration des méthodes
 public :
     Grille(int x = 0, int y = 0, int hauteurGrille = 120, int largeurGrille = 120, int tailleGrille = 4); /* Constructeur par défaut */
-    BlocNumerote* nouveauBlocNum(int i, int j, int valeur); /* Instancie un nouveau bloc numéroté avec une valeur passée en paramètre
-                        Le bloc sera situé à la ligne i et la colonne j de la matrice (grille).
-                        En fonction de i et j, on pourra déterminer en pixel les coordonnées du bloc dans la grille */
-    BlocNumerote* nouveauBlocNum(int i, int j); /* Surchage de la méthode permettant d'instancier un nouveau bloc avec
-                                                   une valeur choisie aléatoirement parmi 2 et 4 */
-    BlocNul* nouveauBlocNul(int i, int j); /* Instancie un nouveau bloc nul, de la même manière que la méthode nouveauBlocNum */
-    void placerBlocNum(int i, int j); /* Place un nouveau bloc numéroté avec une position aléatoire dans la grille */
+    void nouveauBlocNum(); /* Place un nouveau bloc numéroté dans la grille avec une valeur aléatoirement choisie parmi 2 et 4 (avec des probabilités
+            respectivement égales à 3/4 et 1/4. Lorsqu'on créé un nouveau bloc numéroté, il est placé aléatoirement.
+            On va donc déterminer dans cette méthode la case ou va se trouver ce nouveau bloc */
+    void nouveauBlocNul(int i, int j); /* Place un nouveau bloc nul dans la grille. Lorsqu'on créé un nouveau bloc nul, on connait déjà sa position */
+    void fusionnerBlocs(int i_bloc1, int j_bloc1, int i_bloc2, int j_bloc2); /* Fusionne 2 blocs numérotés de la grille.
+                                On part du principe qu'on les fusionne dans la case du bloc 1 : on déplace le bloc 2 vers le bloc 1 */
     void initialiserGrille(); /* Initialise la grille en la remplissant de blocs nuls et de 2 blocs numérotés */
 
     // int getNbBloc(); /* Renvoie le nombre de blocs non nuls actuellement présents dans la grille */
