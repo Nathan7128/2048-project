@@ -69,4 +69,32 @@ void Grille::nouveauBlocNul(int i, int j) {
     m_matBlocs[i][j] = new BlocNul(x, y, m_tailleBlocs);
 }
 
+void Grille::initialiserGrille() {
+    for (int i = 0; i < m_tailleGrille; i++) {
+        for (int j = 0; j < m_tailleGrille; j++) {
+            nouveauBlocNul(i, j);
+        }
+    }
+    nouveauBlocNum();
+    nouveauBlocNum();
+}
+
+void Grille::fusionnerBlocs(int i_bloc1, int j_bloc1, int i_bloc2, int j_bloc2) {
+    BlocNumerote& bloc1 = (BlocNumerote&)m_matBlocs[i_bloc1][j_bloc1], bloc2 = (BlocNumerote&)m_matBlocs[i_bloc2][j_bloc2];
+
+    delete m_matBlocs[i_bloc1][j_bloc1];
+    delete m_matBlocs[i_bloc2][j_bloc2];
+
+    m_matBlocs[i_bloc1][j_bloc1] = new BlocNumerote(bloc1.getX(), bloc1.getY(), bloc1.getValeur() + bloc2.getValeur(), m_tailleBlocs);
+    nouveauBlocNul(bloc2.getX(), bloc2.getY());
+}
+
+
+
+
+
+
+
+
+
 

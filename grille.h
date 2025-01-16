@@ -32,9 +32,9 @@ public :
             respectivement égales à 3/4 et 1/4. Lorsqu'on créé un nouveau bloc numéroté, il est placé aléatoirement.
             On va donc déterminer dans cette méthode la case ou va se trouver ce nouveau bloc */
     void nouveauBlocNul(int i, int j); /* Place un nouveau bloc nul dans la grille. Lorsqu'on créé un nouveau bloc nul, on connait déjà sa position */
+    void initialiserGrille(); /* Initialise la grille en la remplissant de blocs nuls et de 2 blocs numérotés placés aléatoirement dans la grille */
     void fusionnerBlocs(int i_bloc1, int j_bloc1, int i_bloc2, int j_bloc2); /* Fusionne 2 blocs numérotés de la grille.
                                 On part du principe qu'on les fusionne dans la case du bloc 1 : on déplace le bloc 2 vers le bloc 1 */
-    void initialiserGrille(); /* Initialise la grille en la remplissant de blocs nuls et de 2 blocs numérotés */
 
     // int getNbBloc(); /* Renvoie le nombre de blocs non nuls actuellement présents dans la grille */
     // void modifierCase(Bloc bloc, int i, int j); /* Permet de modifier le contenu de la case située à la ligne i
