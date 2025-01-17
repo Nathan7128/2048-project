@@ -21,3 +21,11 @@ int Bloc::getX() {
 int Bloc::getY() {
     return m_y;
 }
+
+void Bloc::setX(int x) {
+    m_x = x;
+}
+
+void Bloc::setY(int y) {
+    m_y = y;
+}

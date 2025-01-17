@@ -28,6 +28,10 @@ public :
     int getX();
     int getY();
 
+    // Mutateurs
+    void setX(int x);
+    void setY(int y);
+
     virtual void dessiner(QPainter *p) = 0; /* Dessine le bloc dans la grille.
                             Méthode abstraite car les différentes classes dérivées n'auront pas la même implémentation de cette méthode.
                             Les paramètres x (abscicce) et y (ordonnée) correspondent au coin en haut à gauche du bloc */
