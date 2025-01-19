@@ -18,12 +18,20 @@ Grille::Grille(int x, int y, int tailleGrille, int nbLignesCol) {
     }
 }
 
+int Grille::getNbBlocs() {
+    return m_nbBlocs;
+}
+
+int Grille::getNbLignesCol() {
+    return m_nbLignesCol;
+}
+
 Bloc* Grille::getBloc(int i, int j) {
     return m_matBlocs[i][j];
 }
 
 void Grille::setBloc(int i, int j, Bloc * bloc) {
-    delete m_matBlocs[i][j];
+    // delete m_matBlocs[i][j];
     m_matBlocs[i][j] = bloc;
 }
 

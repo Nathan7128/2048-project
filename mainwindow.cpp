@@ -11,4 +11,27 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_grille;
+}
+
+Grille * MainWindow::getGrille() {
+    return m_grille;
+}
+
+void MainWindow::setGrille(Grille * grille) {
+    m_grille = grille;
+}
+
+void MainWindow::paintEvent(QPaintEvent * e) {
+    QWidget::paintEvent(e);
+    QPainter painter(this);
+
+    int nb_lignes_col = m_grille->getNbLignesCol();
+
+    m_grille->dessiner(&painter);
+    for (int i = 0; i < nb_lignes_col; i++) {
+        for (int j = 0; j < nb_lignes_col; j++) {
+            m_grille->getBloc(i, j)->dessiner(&painter);
+        }
+    }
 }

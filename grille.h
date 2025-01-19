@@ -34,6 +34,11 @@ protected :
     // Déclaration des méthodes
 public :
     Grille(int x = 0, int y = 0, int tailleGrille = 120, int nbLignesCol = 4); /* Constructeur par défaut */
+
+    // Accesseurs
+    int getNbBlocs();
+    int getNbLignesCol();
+
     Bloc * getBloc(int i, int j); /* Renvoie le pointeur de bloc contenu dans la case située à la ligne i et la colonne j */
     void setBloc(int i, int j, Bloc * bloc);
     void nouveauBlocNum(); /* Place un nouveau bloc numéroté dans la grille avec une valeur aléatoirement choisie parmi 2 et 4 (avec des probabilités
