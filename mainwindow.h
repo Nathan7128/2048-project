@@ -5,6 +5,7 @@
 
 #include "grille.h"
 #include <QMainWindow>
+#include <iostream>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

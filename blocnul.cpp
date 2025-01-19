@@ -3,7 +3,7 @@
 
 
 BlocNul::BlocNul(int x, int y, int taille_bloc):Bloc(x, y, taille_bloc) {
-    m_couleur = "#dbdada";
+    m_couleur = QColor("#dbdada");
     m_type = 1;
 }
 

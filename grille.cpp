@@ -2,7 +2,7 @@
 
 
 
-QColor Grille::s_couleurContours = "#757575";
+QColor Grille::s_couleurContours = QColor("#757575");
 
 Grille::Grille(int x, int y, int tailleGrille, int nbLignesCol) {
     m_nbBlocs = 0;

@@ -3,7 +3,7 @@
 
 
 Bloc::Bloc(int x, int y, int tailleBloc) {
-    m_couleur = "#ffffff";
+    m_couleur = QColor("#ffffff");
     m_type = 0;
     m_x = x;
     m_y = y;

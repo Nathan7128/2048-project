@@ -10,40 +10,40 @@ BlocNumerote::BlocNumerote(int x, int y, int valeur, int taille_bloc):Bloc(x, y,
     // Attribution de la couleur du bloc à l'aide d'un switch en fonction de la valeur
     switch (valeur) {
     case 2 :
-        m_couleur = "#eeed4a";
+        m_couleur = QColor("#eeed4a");
         break;
     case 4 :
-        m_couleur = "#ede0c8";
+        m_couleur = QColor("#ede0c8");
         break;
     case 8 :
-        m_couleur = "#f2b179";
+        m_couleur = QColor("#f2b179");
         break;
     case 16 :
-        m_couleur = "#f59563";
+        m_couleur = QColor("#f59563");
         break;
     case 32 :
-        m_couleur = "#f67c5f";
+        m_couleur = QColor("#f67c5f");
         break;
     case 64 :
-        m_couleur = "#f65e3b";
+        m_couleur = QColor("#f65e3b");
         break;
     case 128 :
-        m_couleur = "#edcf72";
+        m_couleur = QColor("#edcf72");
         break;
     case 256 :
-        m_couleur = "#edcc61";
+        m_couleur = QColor("#edcc61");
         break;
     case 512 :
-        m_couleur = "#edc850";
+        m_couleur = QColor("#edc850");
         break;
     case 1024 :
-        m_couleur = "#edc53f";
+        m_couleur = QColor("#edc53f");
         break;
     case 2048 :
-        m_couleur = "#edc22e";
+        m_couleur = QColor("#edc22e");
         break;
     default :
-        m_couleur = "#000000";
+        m_couleur = QColor("#000000");
     }
 }
 
