@@ -10,7 +10,9 @@ Grille::Grille(int x, int y, int tailleGrille, int nbLignesCol) {
     m_y = y;
     m_tailleGrille = tailleGrille;
     m_nbLignesCol = nbLignesCol;
-    m_epContours = 3;
+    m_epContours = 2;
+    m_tailleBlocs = 100;
+    m_tailleGrille = (nbLignesCol + 1)*m_epContours + nbLignesCol*m_tailleBlocs;
 
     m_matBlocs = new Bloc * *[tailleGrille];
     for (int i = 0; i < tailleGrille; i++) {
@@ -234,25 +236,16 @@ bool Grille::estFinie() {
 }
 
 void Grille::dessiner(QPainter *p) {
-    p->setPen(QPen(s_couleurContours, m_epContours));
-    // Traçage des contours extérieur (les bords)
 
-    // Bord haut
-    p->drawLine(m_x, m_y, m_x + m_tailleGrille, m_y);
-    // Bord bas
-    p->drawLine(m_x, m_y + m_tailleGrille, m_x + m_tailleGrille, m_y + m_tailleGrille);
-    // Bord gauche
-    p->drawLine(m_x, m_y, m_x, m_y + m_tailleGrille);
-    // Bord droit
-    p->drawLine(m_x + m_tailleGrille, m_y, m_x, m_y + m_tailleGrille);
+    for (int i = 0; i < m_nbLignesCol + 1; i++) {
+        // Lorsqu'on trace un rectangle avec fillRect, alors le coin en haut à gauche est de coordonnée (m_x, m_y), le coin en haut à droite
+        // (m_x + largeur) et le coin en bas à gauche (m_x, m_y + hauteur)
 
-    // Contours intérieur
-    for (int i = 0; i < m_nbLignesCol; i++) {
         // Traçage de la colonne
-        p->drawLine(m_x + i*(m_tailleBlocs + m_epContours), m_y, m_x + i*(m_tailleBlocs + m_epContours), m_y + m_tailleGrille);
+        p->fillRect(m_x + i*(m_tailleBlocs + m_epContours), m_y, m_epContours, m_tailleGrille, QColor("#000000"));
 
         // Traçage de la ligne
-        p->drawLine(m_x, m_y + i*(m_tailleBlocs + m_epContours), m_x + m_tailleGrille, m_y + i*(m_tailleBlocs + m_epContours));
+        // p->fillRect(m_x, m_y + i*(m_tailleBlocs + m_epContours), m_tailleGrille, m_epContours, QColor("#000000"));
     }
 }
 

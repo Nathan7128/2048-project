@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     srand(time(NULL));
     QApplication a(argc, argv);
     MainWindow w;
-    Grille * grille = new Grille(0, 0, 120, 4);
+    Grille * grille = new Grille(100, 100, 200, 4);
     w.setGrille(grille);
     grille->initialiserGrille();
     w.show();
