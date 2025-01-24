@@ -4,6 +4,7 @@
 
 
 #include <QPainter>
+#include <coordonnees.h>
 
 
 
@@ -15,22 +16,20 @@ protected :
     QColor m_couleur; /* Couleur du bloc (dépend de sa valeur) */
     int m_type; /* Utilisé pour la hiérarchie de classe : permet d'identifier à partir de quelle classe dérivée l'objet à été instancié.
                    On attribut le type 0 aux objets instanciés à partir de cette classe */
-    int m_x; /* Coordonnée (abscisse) du coin en haut à gauche du bloc */
-    int m_y; /* Coordonnée (ordonnée) du coin en haut à gauche du bloc */
+    Coordonnees m_coord; /* Coordonnées x (abscisse) et y (ordonnée) du bloc exprimées en pixel */
     int m_tailleBloc; /* Taille du bloc en pixel (égale à la hauteur et la largeur du bloc) */
 
     // Méthodes publiques
 public :
-    Bloc(int x = 0, int y = 0, int tailleBloc = 30); /* Constructeur par défaut */
+    Bloc(Coordonnees coord, int tailleBloc = 30); /* Constructeur par défaut */
+    virtual ~Bloc() = default; /* Destructeur */
 
     // Accesseurs
     int getType();
-    int getX();
-    int getY();
+    Coordonnees getCoord();
 
     // Mutateurs
-    void setX(int x);
-    void setY(int y);
+    void setCoord(Coordonnees coord);
 
     virtual void dessiner(QPainter *p) = 0; /* Dessine le bloc dans la grille.
                             Méthode abstraite car les différentes classes dérivées n'auront pas la même implémentation de cette méthode.

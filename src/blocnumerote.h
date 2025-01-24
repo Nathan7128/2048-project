@@ -14,14 +14,21 @@ class BlocNumerote : public Bloc
     // Attributs protégés
 protected :
     int m_valeur; /* Valeur attribuée au bloc */
-    int m_epCrayonTexte; /* Épaisseur en pixel du crayon utilisé pour tracer le texte du bloc numéroté, qui correspond à la valeur du bloc */
+    QFont m_font; /* Police utilisée pour écrire la valeur du bloc à l'intérieur de la case */
+
+    // Attributs statiques
+    static QPen s_pen; /* Stylo utilisé pour écrire la valeur du bloc à l'intérieur de la case */
 
     // Méthodes publiques
 public :
-    BlocNumerote(int x = 0, int y = 0, int valeur = 2, int taille_bloc = 30); /* Contructeur par défaut : on attribue le type 2 aux blocs numérotés.
+    BlocNumerote(Coordonnees coord, int valeur = 2, int taille_bloc = 30); /* Contructeur par défaut : on attribue le type 2 aux blocs numérotés.
                                                                                 Le contructeur prend en paramètre une valeur, et on définira la couleur du bloc en fonction de cette dernière */
+    ~BlocNumerote() {};
+
+    // Accesseurs
+    int getValeur();
+
     void dessiner(QPainter *p); /* Dessine le bloc numéroté dans la grille */
-    int getValeur(); /* Retourne la valeur du bloc */
 };
 
 

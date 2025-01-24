@@ -33,9 +33,38 @@ void MainWindow::paintEvent(QPaintEvent * e) {
 
     m_grille->dessiner(&painter);
 
-    // for (int i = 0; i < nb_lignes_col; i++) {
-    //     for (int j = 0; j < nb_lignes_col; j++) {
-    //         m_grille->getBloc(i, j)->dessiner(&painter);
-    //     }
-    // }
+    for (int i = 0; i < nb_lignes_col; i++) {
+        for (int j = 0; j < nb_lignes_col; j++) {
+            m_grille->getBloc(i, j)->dessiner(&painter);
+        }
+    }
 }
+
+void MainWindow::keyPressEvent(QKeyEvent * event) {
+    char direction;
+
+    switch (event->key()) {
+    case Qt::Key_Right :
+        direction = 'd';
+        break;
+    case Qt::Key_Left :
+        direction = 'g';
+        break;
+    case Qt::Key_Up :
+        direction = 'h';
+        break;
+    case Qt::Key_Down :
+        direction = 'b';
+        break;
+    }
+
+    m_grille->deplacerBlocs(direction);
+
+    this->repaint();
+}
+
+
+
+
+
+

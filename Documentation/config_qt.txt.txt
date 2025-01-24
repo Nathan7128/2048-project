@@ -1,0 +1,3 @@
+Qt -> Qt 6.8.1 -> MinGW 13.1.0 64-bit
+Qt -> Build Tools -> MinGW 13.1.0 64-bit, CMake 3.29.3, Ninja 1.12.0
+Qt Creator -> Qt Creator 15.0.1, CDB Debugger Support, Debugging Tools for Windows

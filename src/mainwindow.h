@@ -5,6 +5,7 @@
 
 #include "grille.h"
 #include <QMainWindow>
+#include <QKeyEvent>
 #include <iostream>
 
 QT_BEGIN_NAMESPACE
@@ -33,5 +34,6 @@ private:
     Ui::MainWindow *ui;
     Grille * m_grille;
     void paintEvent(QPaintEvent * e);
+    void keyPressEvent(QKeyEvent * event);
 };
 #endif // MAINWINDOW_H

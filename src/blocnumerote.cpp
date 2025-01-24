@@ -2,15 +2,19 @@
 
 
 
-BlocNumerote::BlocNumerote(int x, int y, int valeur, int taille_bloc):Bloc(x, y, taille_bloc) {
+QPen BlocNumerote::s_pen = QPen(QColor("#000000")); /* Stylo avec couleur noire */
+
+
+
+BlocNumerote::BlocNumerote(Coordonnees coord, int valeur, int taille_bloc):Bloc(coord, taille_bloc) {
     m_type = 2;
     m_valeur = valeur;
-    m_epCrayonTexte = 1;
+    m_font = QFont("Arial", taille_bloc/2.5, QFont::Bold);
 
     // Attribution de la couleur du bloc à l'aide d'un switch en fonction de la valeur
     switch (valeur) {
     case 2 :
-        m_couleur = QColor("#eeed4a");
+        m_couleur = QColor("#eee4da");
         break;
     case 4 :
         m_couleur = QColor("#ede0c8");
@@ -47,13 +51,19 @@ BlocNumerote::BlocNumerote(int x, int y, int valeur, int taille_bloc):Bloc(x, y,
     }
 }
 
-void BlocNumerote::dessiner(QPainter *p) {
-    p->fillRect(m_x, m_y, m_tailleBloc, m_tailleBloc, QBrush(m_couleur));
-    p->setPen(QPen(QColor("#000000"), m_epCrayonTexte));
-    p->setFont(QFont("Arial", 16));
-    p->drawText(m_x + 20, m_y + 20, QString::number(m_valeur));
-}
-
 int BlocNumerote::getValeur() {
     return m_valeur;
+}
+
+void BlocNumerote::dessiner(QPainter *p) {
+    int x = m_coord.getX(), y = m_coord.getY();
+    QRect bloc(x, y, m_tailleBloc, m_tailleBloc);
+
+    // Affichage du bloc
+    p->fillRect(bloc, m_couleur);
+
+    // Affichage de la valeur du bloc
+    p->setPen(s_pen);
+    p->setFont(m_font);
+    p->drawText(bloc, Qt::AlignCenter, QString::number(m_valeur));
 }

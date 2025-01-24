@@ -18,8 +18,7 @@ class Grille {
 protected :
     Bloc*** m_matBlocs; /* Matrice de pointeurs vers des objets de type "Bloc" : cette matrice correspond à la grille */
     int m_nbBlocs; /* Nombre de blocs non nuls dans la grille à un instant t (nombre de cases non vides) */
-    int m_x; /* Coordonnée (abscisse) du coin en haut à gauche de la grille */
-    int m_y; /* Coordonnée (ordonnée) du coin en haut à gauche de la grille */
+    Coordonnees m_coord; /* Coordonnées x (abscisse) et y (ordonnée) de la grille exprimées en pixel */
     int m_tailleGrille; /* Largeur et hauteur de la grille en pixel (la grille est un carré). Par taille, on entend la longueur en pixel entre le
         l'extérieur du contour gauche de la grille et l'extérieur du bord droit de la grille (ou du bord bas et du bord haut) */
     int m_nbLignesCol; /* Nombre de lignes et de colonnes de la grille : si m_nbLignesCol = 4, alors la grille est de taille 4x4 */
@@ -33,20 +32,30 @@ protected :
 
     // Déclaration des méthodes
 public :
-    Grille(int x = 0, int y = 0, int tailleGrille = 120, int nbLignesCol = 4); /* Constructeur par défaut */
+    Grille(Coordonnees coord, int tailleGrille = 120, int nbLignesCol = 4); /* Constructeur par défaut */
+    Grille(const Grille& grille); /* Constructeur de recopie */
+    ~Grille(); /* Destructeur */
+
+    // Surcharge des opérateurs
+    Grille& operator=(const Grille& g);
 
     // Accesseurs
-    int getNbBlocs();
+    Bloc * getBloc(int i, int j); /* Renvoie le pointeur de bloc contenu dans la case située à la ligne i et la colonne j */
+    int getNbBlocs(); /* Renvoie le nombre de blocs numérotés actuellement présents dans la grille */
     int getNbLignesCol();
 
-    Bloc * getBloc(int i, int j); /* Renvoie le pointeur de bloc contenu dans la case située à la ligne i et la colonne j */
-    void setBloc(int i, int j, Bloc * bloc);
+    // Mutateurs
+    void setBloc(int i, int j, Bloc * bloc); /* Place un bloc à la ligne i et la colonne j de la grille */
+
+    Coordonnees convertirCoordBloc(int i, int j); /* Permet de convertir des coordonnées d'un bloc exprimées en ligne et colonne en coordonnées
+            exprimées en pixel */
     void nouveauBlocNum(); /* Place un nouveau bloc numéroté dans la grille avec une valeur aléatoirement choisie parmi 2 et 4 (avec des probabilités
             respectivement égales à 3/4 et 1/4. Lorsqu'on créé un nouveau bloc numéroté, il est placé aléatoirement.
             On va donc déterminer dans cette méthode la case ou va se trouver ce nouveau bloc */
     void initialiserGrille(); /* Initialise la grille en la remplissant de blocs nuls et de 2 blocs numérotés placés aléatoirement dans la grille */
-    void transfererBloc(int i_old, int j_old, int i_new, int j_new); /* Déplace un bloc situé à la ligne i et la colonne j de la grille jusqu'à la
-                ligne i_new et la colonne j_new de la grille */
+    void transfererBloc(int i_old, int j_old, int i_new, int j_new); /* Déplace un bloc numéroté situé à la ligne i et la colonne j de la grille
+            jusqu'à la ligne i_new et la colonne j_new de la grille. Le déplacement est effectué dans le cas ou le bloc est déplacé jusqu'à un bord ou
+            jusqu'au prochain bloc numéroté qui lui bloque le déplacement (avec lequel il ne peut pas fusionner) */
     void fusionnerBlocs(int i_bloc_depl, int j_bloc_depl, int i_bloc_fus, int j_bloc_fus); /* Fusionne 2 blocs numérotés de la grille.
                         Une fusion est le fait de déplacer un bloc numéroté vers un autre bloc numéroté qui possède la même valeur, et ainsi
                         obtenir un nouveau bloc numéroté d'une valeur égale à deux fois la valeur des blocs à fusionner.
@@ -65,7 +74,6 @@ public :
              à chaque tour ou la grille est remplie de blocs numérotés, c'est à dire à chaque tour ou m_nbBlocs = m_tailleGrille*m_tailleGrille */
     void dessiner(QPainter *p); /* Dessine la grille, c'est à dire tous les contours des blocs. Tous les contours ont la même épaisseur, que ce soit
             ceux sur les bords ou ceux à l'intérieur (qui séparent les blocs) */
-
 };
 
 

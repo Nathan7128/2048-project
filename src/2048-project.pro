@@ -12,6 +12,7 @@ SOURCES += \
     bloc.cpp \
     blocnul.cpp \
     blocnumerote.cpp \
+    coordonnees.cpp \
     grille.cpp \
     main.cpp \
     mainwindow.cpp
@@ -20,6 +21,7 @@ HEADERS += \
     bloc.h \
     blocnul.h \
     blocnumerote.h \
+    coordonnees.h \
     grille.h \
     mainwindow.h
 
