@@ -11,6 +11,8 @@ Grille::Grille(Coordonnees coord, int tailleGrille, int nbLignesCol) {
     m_tailleBlocs = 7 * m_epContours;
     m_tailleGrille = (nbLignesCol + 1)*m_epContours + nbLignesCol*m_tailleBlocs;
 
+    m_score = 0;
+
     m_matBlocs = new Bloc * *[nbLignesCol];
     for (int i = 0; i < nbLignesCol; i++) {
         m_matBlocs[i] = new Bloc * [nbLignesCol];
@@ -27,6 +29,7 @@ Grille::Grille(const Grille& g) {
     m_nbLignesCol = g.m_nbLignesCol;
     m_tailleBlocs = g.m_tailleBlocs;
     m_epContours = g.m_epContours;
+    m_score = g.m_score;
 
     m_matBlocs = new Bloc * *[m_nbLignesCol];
     for (int i = 0; i < m_nbLignesCol; i++) {
@@ -65,6 +68,7 @@ Grille& Grille::operator=(const Grille& g) {
         m_nbLignesCol = g.m_nbLignesCol;
         m_tailleBlocs = g.m_tailleBlocs;
         m_epContours = g.m_epContours;
+        m_score = g.m_score;
 
         m_matBlocs = new Bloc * *[m_nbLignesCol];
         for (int i = 0; i < m_nbLignesCol; i++) {
@@ -184,11 +188,16 @@ void Grille::transfererBloc(int i_old, int j_old, int i_new, int j_new) {
 
 void Grille::fusionnerBlocs(int i_bloc_depl, int j_bloc_depl, int i_bloc_fus, int j_bloc_fus) {
     BlocNumerote * bloc_depl = (BlocNumerote*)getBloc(i_bloc_depl, j_bloc_depl), * bloc_fus = (BlocNumerote*)getBloc(i_bloc_fus, j_bloc_fus);
+
     BlocNul * bloc_nul = new BlocNul(bloc_depl->getCoord(), m_tailleBlocs);
-    BlocNumerote * new_bloc = new BlocNumerote(bloc_fus->getCoord(), 2 * bloc_fus->getValeur(), m_tailleBlocs);
+
+    int new_valeur = 2 * bloc_fus->getValeur();
+
+    BlocNumerote * new_bloc = new BlocNumerote(bloc_fus->getCoord(), new_valeur, m_tailleBlocs);
     setBloc(i_bloc_depl, j_bloc_depl, bloc_nul);
     setBloc(i_bloc_fus, j_bloc_fus, new_bloc);
     m_nbBlocs--;
+    m_score += new_valeur;
 }
 
 bool Grille::deplacerBloc(int i, int j, char direction, bool test_finie) {
@@ -348,6 +357,12 @@ void Grille::dessiner(QPainter *p) {
         p->fillRect(x, y + i*(m_tailleBlocs + m_epContours), m_tailleGrille, m_epContours, QColor("#898080"));
     }
 }
+
+// void Grille::afficherScore(QPainter *p) {
+//     int x = m_coord.getX(), y = m_coord.getY();
+
+//     QRect grille(x + m_tailleGrille + 100, y + 50, 200, 100);
+// }
 
 void Grille::afficherPerdu(QPainter *p) {
     int x = m_coord.getX(), y = m_coord.getY();

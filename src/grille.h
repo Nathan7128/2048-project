@@ -26,6 +26,7 @@ protected :
             La taille du bloc correspond à sa largeur et à sa hauteur */
     int m_epContours; /* Epaisseur du crayon utilisé pour tracer les contours extérieurs et intérieurs de la grille.
             Les contours intérieurs correspondent aux traits de séparation entre les différents blocs */
+    int m_score; /* Score de la partie en cours */
 
     // Déclaration des méthodes
 public :
@@ -79,6 +80,7 @@ public :
             à chaque tour ou la grille est remplie de blocs numérotés, c'est à dire à chaque tour ou m_nbBlocs = m_tailleGrille*m_tailleGrille */
     void dessiner(QPainter *p); /* Dessine la grille, c'est à dire tous les contours des blocs. Tous les contours ont la même épaisseur, que ce soit
             ceux sur les bords ou ceux à l'intérieur (qui séparent les blocs) */
+    // void afficherScore(QPainter *p); /* Affiche le score de la partie */
     void afficherPerdu(QPainter *p); /* Affiche le message de fin quand la partie est perdue */
 };
 
