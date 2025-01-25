@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    m_estFinie = 0;
 }
 
 MainWindow::~MainWindow()
@@ -38,29 +39,38 @@ void MainWindow::paintEvent(QPaintEvent * e) {
             m_grille->getBloc(i, j)->dessiner(&painter);
         }
     }
+
+    m_estFinie = m_grille->estFinie();
+
+    if (m_estFinie) {
+        m_grille->afficherPerdu(&painter);
+    }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent * event) {
-    char direction;
 
-    switch (event->key()) {
-    case Qt::Key_Right :
-        direction = 'd';
-        break;
-    case Qt::Key_Left :
-        direction = 'g';
-        break;
-    case Qt::Key_Up :
-        direction = 'h';
-        break;
-    case Qt::Key_Down :
-        direction = 'b';
-        break;
+    if (!m_estFinie) {
+        char direction;
+
+        switch (event->key()) {
+        case Qt::Key_Right :
+            direction = 'd';
+            break;
+        case Qt::Key_Left :
+            direction = 'g';
+            break;
+        case Qt::Key_Up :
+            direction = 'h';
+            break;
+        case Qt::Key_Down :
+            direction = 'b';
+            break;
+        }
+
+        m_grille->deplacerBlocs(direction);
+
+        this->repaint();
     }
-
-    m_grille->deplacerBlocs(direction);
-
-    this->repaint();
 }
 
 

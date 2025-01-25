@@ -20,15 +20,12 @@ protected :
     int m_nbBlocs; /* Nombre de blocs non nuls dans la grille à un instant t (nombre de cases non vides) */
     Coordonnees m_coord; /* Coordonnées x (abscisse) et y (ordonnée) de la grille exprimées en pixel */
     int m_tailleGrille; /* Largeur et hauteur de la grille en pixel (la grille est un carré). Par taille, on entend la longueur en pixel entre le
-        l'extérieur du contour gauche de la grille et l'extérieur du bord droit de la grille (ou du bord bas et du bord haut) */
+            l'extérieur du contour gauche de la grille et l'extérieur du bord droit de la grille (ou du bord bas et du bord haut) */
     int m_nbLignesCol; /* Nombre de lignes et de colonnes de la grille : si m_nbLignesCol = 4, alors la grille est de taille 4x4 */
     int m_tailleBlocs; /* Taille de tous les blocs de la grille (ils font tous la même taille)
-                       La taille du bloc correspond à sa largeur et à sa hauteur */
+            La taille du bloc correspond à sa largeur et à sa hauteur */
     int m_epContours; /* Epaisseur du crayon utilisé pour tracer les contours extérieurs et intérieurs de la grille.
-                         Les contours intérieurs correspondent aux traits de séparation entre les différents blocs */
-
-    // Attributs statiques
-    static QColor s_couleurContours;
+            Les contours intérieurs correspondent aux traits de séparation entre les différents blocs */
 
     // Déclaration des méthodes
 public :
@@ -57,23 +54,32 @@ public :
             jusqu'à la ligne i_new et la colonne j_new de la grille. Le déplacement est effectué dans le cas ou le bloc est déplacé jusqu'à un bord ou
             jusqu'au prochain bloc numéroté qui lui bloque le déplacement (avec lequel il ne peut pas fusionner) */
     void fusionnerBlocs(int i_bloc_depl, int j_bloc_depl, int i_bloc_fus, int j_bloc_fus); /* Fusionne 2 blocs numérotés de la grille.
-                        Une fusion est le fait de déplacer un bloc numéroté vers un autre bloc numéroté qui possède la même valeur, et ainsi
-                        obtenir un nouveau bloc numéroté d'une valeur égale à deux fois la valeur des blocs à fusionner.
-                        Les entiers "i_bloc_depl" et "j_bloc_depl" correspondent à la ligne et la colonne de la case qui contient le pointeur vers le
-                        bloc à déplacer. Après avoir déplacer et fusionner ce bloc, on va placer un pointeur vers un bloc nul dans la case qui le
-                        contenait.
-                        Les entiers "i_bloc_fus" et "j_bloc_fus" correspondent à la ligne et la colonne de la case qui contient le pointeur vers le
-                        bloc qui va être fusionner avec le bloc à déplacer. Ce bloc sera donc remplacé par le bloc résultant de la fusion réalisée. */
-    bool deplacerBloc(int i, int j, char direction); /* Déplace un bloc numéroté situé à la ligne i et la colonne j de la grille dans une direction.
-            Retourne true si le bloc a été déplacé été false sinon */
-    void deplacerBlocs(char direction); /* Permet de déplacer (ou non s'ils sont bloqués) l'ensemble des blocs numérotés dans une direction saisie
-            grâce aux 4 touches fléchées du clavier. Lorsqu'on effectue un déplacement, on n'essaye pas de déplacer les blocs qui sont sur le bord de
-            la grille car ils sont bloqués (par le bord de la grille) et ne pourrons pas être déplacés dans tous les cas. Par exemple, si on déplace
-            les blocs vers la droite, on n'essaiera pas de déplacer les blocs de la colonne la plus à droite */
+            Une fusion est le fait de déplacer un bloc numéroté vers un autre bloc numéroté qui possède la même valeur, et ainsi
+            obtenir un nouveau bloc numéroté d'une valeur égale à deux fois la valeur des blocs à fusionner.
+            Les entiers "i_bloc_depl" et "j_bloc_depl" correspondent à la ligne et la colonne de la case qui contient le pointeur vers le
+            bloc à déplacer. Après avoir déplacer et fusionner ce bloc, on va placer un pointeur vers un bloc nul dans la case qui le
+            contenait.
+            Les entiers "i_bloc_fus" et "j_bloc_fus" correspondent à la ligne et la colonne de la case qui contient le pointeur vers le
+            bloc qui va être fusionner avec le bloc à déplacer. Ce bloc sera donc remplacé par le bloc résultant de la fusion réalisée. */
+    bool deplacerBloc(int i, int j, char direction, bool test_finie = false); /* Déplace un bloc numéroté situé à la ligne i et la colonne j de la
+            grille dans une direction. Retourne true si le bloc a été déplacé été false sinon.
+            Le paramètre "test_finie" permet d'indiquer si on utilise la méthode pour réellement déplacer un bloc ou pour savoir si le bloc est
+            déplaçable. En effet, lorsqu'on souhaitera tester si la partie est finie (s'il n'y a plus de déplacement possible), on voudra essayer de
+            déplacer chaque bloc dans chaque direction, sans pour autont effectuer le déplacement. Ce paramètre vaut false si on souhaite réellement
+            déplacer le bloc, et true si on veut juste tester si le bloc est déplaçable. */
+    bool deplacerBlocs(char direction, bool test_finie = false); /* Permet de déplacer (ou non s'ils sont bloqués) l'ensemble des blocs numérotés dans
+            une direction saisie grâce aux 4 touches fléchées du clavier.
+            Lorsqu'on effectue un déplacement, on n'essaye pas de déplacer les blocs qui sont sur le bord de la grille car ils sont bloqués (par le
+            bord de la grille) et ne pourrons pas être déplacés dans tous les cas. Par exemple, si on déplace les blocs vers la droite, on n'essaiera
+            pas de déplacer les blocs de la colonne la plus à droite.
+            Cette méthode retourne true si au moins un bloc a été déplacé et false sinon.
+            Le paramètre test_finie vaut true uniquement si cette méthode "déplacerBlocs" est appelée par la méthode "est_finie" (si on souhaite savoir si
+            la partie est terminée) */
     bool estFinie(); /* Retourne true si le partie est terminée et false si il y a encore des déplacements possibles. On vérifie si la partie est finie
-             à chaque tour ou la grille est remplie de blocs numérotés, c'est à dire à chaque tour ou m_nbBlocs = m_tailleGrille*m_tailleGrille */
+            à chaque tour ou la grille est remplie de blocs numérotés, c'est à dire à chaque tour ou m_nbBlocs = m_tailleGrille*m_tailleGrille */
     void dessiner(QPainter *p); /* Dessine la grille, c'est à dire tous les contours des blocs. Tous les contours ont la même épaisseur, que ce soit
             ceux sur les bords ou ceux à l'intérieur (qui séparent les blocs) */
+    void afficherPerdu(QPainter *p); /* Affiche le message de fin quand la partie est perdue */
 };
 
 

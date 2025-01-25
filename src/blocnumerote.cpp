@@ -2,10 +2,6 @@
 
 
 
-QPen BlocNumerote::s_pen = QPen(QColor("#000000")); /* Stylo avec couleur noire */
-
-
-
 BlocNumerote::BlocNumerote(Coordonnees coord, int valeur, int taille_bloc):Bloc(coord, taille_bloc) {
     m_type = 2;
     m_valeur = valeur;
@@ -63,7 +59,7 @@ void BlocNumerote::dessiner(QPainter *p) {
     p->fillRect(bloc, m_couleur);
 
     // Affichage de la valeur du bloc
-    p->setPen(s_pen);
+    p->setPen(QPen(QColor("#000000")));
     p->setFont(m_font);
     p->drawText(bloc, Qt::AlignCenter, QString::number(m_valeur));
 }

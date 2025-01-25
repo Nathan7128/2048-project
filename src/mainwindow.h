@@ -6,7 +6,6 @@
 #include "grille.h"
 #include <QMainWindow>
 #include <QKeyEvent>
-#include <iostream>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,15 +24,22 @@ public:
     ~MainWindow();
 
     // Accesseurs
-    Grille * getGrille();
+    Grille * getGrille(); /* Renvoie le pointeur vers la grille utilisée pour jouer */
 
     // Mutateurs
-    void setGrille(Grille * grille);
+    void setGrille(Grille * grille); /* Défini l'attribut m_grille avec un pointeur vers une grille passé en paramètre */
 
 private:
+    // Attributs privés
     Ui::MainWindow *ui;
-    Grille * m_grille;
-    void paintEvent(QPaintEvent * e);
-    void keyPressEvent(QKeyEvent * event);
+    Grille * m_grille; /* Grille utilisée pour jouer la partie */
+    int m_estFinie; /* Vaut 0 si la partie est en cours et 1 si elle est terminée */
+
+    // Overriding
+    void paintEvent(QPaintEvent * e); /* Redéfinition de la méthode permettant de dessiner la fenêtre */
+    void keyPressEvent(QKeyEvent * event); /* Redéfinition de la méthode permettant de de capter les évènements du clavier */
 };
+
+
+
 #endif // MAINWINDOW_H

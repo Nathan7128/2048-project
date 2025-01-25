@@ -16,9 +16,6 @@ protected :
     int m_valeur; /* Valeur attribuée au bloc */
     QFont m_font; /* Police utilisée pour écrire la valeur du bloc à l'intérieur de la case */
 
-    // Attributs statiques
-    static QPen s_pen; /* Stylo utilisé pour écrire la valeur du bloc à l'intérieur de la case */
-
     // Méthodes publiques
 public :
     BlocNumerote(Coordonnees coord, int valeur = 2, int taille_bloc = 30); /* Contructeur par défaut : on attribue le type 2 aux blocs numérotés.

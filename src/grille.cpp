@@ -2,10 +2,6 @@
 
 
 
-QColor Grille::s_couleurContours = QColor("#757575");
-
-
-
 Grille::Grille(Coordonnees coord, int tailleGrille, int nbLignesCol) {
     m_nbBlocs = 0;
     m_coord = coord;
@@ -195,7 +191,7 @@ void Grille::fusionnerBlocs(int i_bloc_depl, int j_bloc_depl, int i_bloc_fus, in
     m_nbBlocs--;
 }
 
-bool Grille::deplacerBloc(int i, int j, char direction) {
+bool Grille::deplacerBloc(int i, int j, char direction, bool test_finie) {
     int i_new = i, j_new = j, i_fus = i, j_fus = j;
     // bool_bord nous permettra de savoir s'il y a un bloc numéroté entre le bloc à déplacer et le bord (on regarde un des bords en fonction de la
     // direction.
@@ -244,7 +240,9 @@ bool Grille::deplacerBloc(int i, int j, char direction) {
     // Étant donne qu'on n'essaye jamais de déplacer les blocs au bord de la grille, si bool_bord vaut true alors on déplace forcément le bloc
     // d'au moins une case
     if (bool_bord) {
-        transfererBloc(i, j, i_new, j_new);
+        if (!test_finie) {
+            transfererBloc(i, j, i_new, j_new);
+        }
         return true;
     }
 
@@ -257,7 +255,9 @@ bool Grille::deplacerBloc(int i, int j, char direction) {
 
         // Cas ou on peut fusionner le bloc à déplacer avec le bloc qui le bloque
         if (bloc_fus->getValeur() == bloc_depl->getValeur()) {
-            fusionnerBlocs(i, j, i_fus, j_fus);
+            if (!test_finie) {
+                fusionnerBlocs(i, j, i_fus, j_fus);
+            }
             return true;
         }
 
@@ -265,14 +265,16 @@ bool Grille::deplacerBloc(int i, int j, char direction) {
         // S'il ces deux blocs sont cotes à cotes (s'il n'y a pas de case libre entre les deux), il n'y a aucun déplacement à effectuer.
         // C'est ce qu'on vérifie avec la condition du else if
         else if (!est_bloque) {
-            transfererBloc(i, j, i_new, j_new);
+            if (!test_finie) {
+                transfererBloc(i, j, i_new, j_new);
+            }
             return true;
         }
     }
     return false;
 }
 
-void Grille::deplacerBlocs(char direction) {
+bool Grille::deplacerBlocs(char direction, bool test_finie) {
     int type_bloc;
     int compt_depl = 0; /* Compteur du nombre de déplacement effectuer */
     int i_min = 0, i_max = m_nbLignesCol, i_increm = 1, j_min = 0, j_max = m_nbLignesCol, j_increm = 1; /* Variables utilisées pour la boucle for */
@@ -301,13 +303,16 @@ void Grille::deplacerBlocs(char direction) {
         for (int j = j_min; j != j_max; j += j_increm) {
             type_bloc = getBloc(i, j)->getType();
             if (type_bloc == 2) {
-                compt_depl += deplacerBloc(i, j, direction);
+                compt_depl += deplacerBloc(i, j, direction, test_finie);
             }
         }
     }
-    if (compt_depl > 0) {
+
+    if (compt_depl > 0 && !test_finie) {
         nouveauBlocNum();
     }
+
+    return compt_depl > 0;
 }
 
 bool Grille::estFinie() {
@@ -316,31 +321,17 @@ bool Grille::estFinie() {
         return false;
     }
 
-    bool est_depl = false;
+    // On va parcourir l'ensemble des directions possibles et regarder si on peut déplacer un bloc pour au moins une des directions
     char directions[] = {'d', 'g', 'h', 'b'}, direction;
-    int compt_dir = 0, i, j;
 
-    while (!est_depl && compt_dir < 4) {
-        direction = directions[compt_dir];
-        i = 0;
-        j = 0;
-        while (!est_depl && i < m_nbLignesCol) {
-            while (!est_depl && j < m_nbLignesCol) {
-                if (getBloc(i, j)->getType() == 2) {
-                    est_depl = deplacerBloc(i, j, direction);
-                }
-                // else {
-                //     throw "erreur car on regarde si la partie est terminée uniquement lorsque le grille est remplie de blocs numérotés.
-                // }
-                j++;
-            }
-            i++;
+    for (int i = 0; i < 4; i++) {
+        direction = directions[i];
+        if (deplacerBlocs(direction, 1)) {
+            return false;
         }
-        compt_dir++;
     }
-    // On retourne donc l'inverse de est_depl, car ce dernier vaut true si un déplacement a été effectué, or on souhaite retourner true lorsqu'aucun
-    // déplacement n'est possible;
-    return !est_depl;
+
+    return true;
 }
 
 void Grille::dessiner(QPainter *p) {
@@ -357,6 +348,24 @@ void Grille::dessiner(QPainter *p) {
         p->fillRect(x, y + i*(m_tailleBlocs + m_epContours), m_tailleGrille, m_epContours, QColor("#898080"));
     }
 }
+
+void Grille::afficherPerdu(QPainter *p) {
+    int x = m_coord.getX(), y = m_coord.getY();
+
+    QRect grille(x, y, m_tailleGrille, m_tailleGrille);
+
+    QColor couleur = Qt::gray;
+    couleur.setAlphaF(0.7);
+
+    p->fillRect(grille, couleur);
+
+    p->setPen(QPen(QColor("#000000")));
+    p->setFont(QFont("Arial", m_tailleGrille/7, QFont::Bold));
+
+    p->drawText(grille, Qt::AlignCenter, "Perdu!");
+}
+
+
 
 
 
