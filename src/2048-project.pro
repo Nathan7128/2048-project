@@ -15,7 +15,8 @@ SOURCES += \
     coordonnees.cpp \
     grille.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    score.cpp
 
 HEADERS += \
     bloc.h \
@@ -23,7 +24,8 @@ HEADERS += \
     blocnumerote.h \
     coordonnees.h \
     grille.h \
-    mainwindow.h
+    mainwindow.h \
+    score.h
 
 FORMS += \
     mainwindow.ui
