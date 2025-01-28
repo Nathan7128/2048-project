@@ -4,7 +4,7 @@
 
 
 #include <QPainter>
-#include <coordonnees.h>
+#include "coordonnees.h"
 
 
 
