@@ -15,12 +15,12 @@ MainWindow::~MainWindow()
     delete m_grille;
 }
 
-Grille * MainWindow::getGrille() {
-    return m_grille;
-}
-
 void MainWindow::setGrille(Grille * grille) {
     m_grille = grille;
+}
+
+void MainWindow::setScore(Score * score) {
+    m_score = score;
 }
 
 void MainWindow::paintEvent(QPaintEvent * e) {
@@ -39,6 +39,8 @@ void MainWindow::paintEvent(QPaintEvent * e) {
             m_grille->getBloc(i, j)->dessiner(&painter);
         }
     }
+
+    m_score->dessiner(&painter);
 
     m_estFinie = m_grille->estFinie();
 

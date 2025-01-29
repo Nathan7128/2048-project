@@ -22,8 +22,16 @@ int main(int argc, char *argv[])
     Grille * grille = new Grille(coord_grille, taille_grille, nb_LignesCol);
     w.setGrille(grille);
 
+    // Instanciation du score de la partie, dépend de la position de la grille
+    int largeur_score = 150, hauteur_score = 80;
+    int x_score = largeur_fenetre - ((x_grille + taille_grille)/2 + largeur_score/2), y_score = hauteur_fenetre/3;
+    Coordonnees coord_score(x_score, y_score);
+    Score * score = new Score(coord_score, largeur_score, hauteur_score);
+    w.setScore(score);
+
     // Initialisation de la grille : on la remplit de blocs vides et de 2 blocs numérotés
     grille->initialiserGrille();
+    grille->setScore(score);
 
     // Affichage de la fenêtre
     w.show();

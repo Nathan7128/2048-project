@@ -94,6 +94,10 @@ void Grille::setBloc(int i, int j, Bloc * bloc) {
     m_matBlocs[i][j] = bloc;
 }
 
+void Grille::setScore(Score * score) {
+    m_score = score;
+}
+
 Coordonnees Grille::convertirCoordBloc(int i, int j) {
     int x_grille = m_coord.getX(), y_grille = m_coord.getY();
 
@@ -193,6 +197,8 @@ void Grille::fusionnerBlocs(int i_bloc_depl, int j_bloc_depl, int i_bloc_fus, in
     setBloc(i_bloc_depl, j_bloc_depl, bloc_nul);
     setBloc(i_bloc_fus, j_bloc_fus, new_bloc);
     m_nbBlocs--;
+
+    m_score->modifierScore(new_valeur);
 }
 
 bool Grille::deplacerBloc(int i, int j, char direction, bool test_finie) {

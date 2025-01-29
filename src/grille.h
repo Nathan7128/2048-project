@@ -6,6 +6,7 @@
 #include "blocnumerote.h"
 #include "blocnul.h"
 #include <string.h>
+#include "score.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ protected :
             La taille du bloc correspond à sa largeur et à sa hauteur */
     int m_epContours; /* Epaisseur du crayon utilisé pour tracer les contours extérieurs et intérieurs de la grille.
             Les contours intérieurs correspondent aux traits de séparation entre les différents blocs */
+    Score* m_score; /* Pointeur vers un objet de type Score correspondant au score en cours de la partie */
 
     // Déclaration des méthodes
 public :
@@ -43,6 +45,7 @@ public :
 
     // Mutateurs
     void setBloc(int i, int j, Bloc * bloc); /* Place un bloc à la ligne i et la colonne j de la grille */
+    void setScore(Score * score);
 
     Coordonnees convertirCoordBloc(int i, int j); /* Permet de convertir des coordonnées d'un bloc exprimées en ligne et colonne en coordonnées
             exprimées en pixel */
