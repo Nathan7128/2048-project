@@ -2,14 +2,14 @@
 
 
 
-Grille::Grille(Coordonnees coord, int tailleGrille, int nbLignesCol) {
+Grille::Grille(Coordonnees coord, int taille, int nbLignesCol) {
     m_nbBlocs = 0;
     m_coord = coord;
-    m_tailleGrille = tailleGrille;
+    m_taille = taille;
     m_nbLignesCol = nbLignesCol;
-    m_epContours = tailleGrille / (8 * nbLignesCol + 1);
+    m_epContours = taille / (8 * nbLignesCol + 1);
     m_tailleBlocs = 7 * m_epContours;
-    m_tailleGrille = (nbLignesCol + 1)*m_epContours + nbLignesCol*m_tailleBlocs;
+    m_taille = (nbLignesCol + 1)*m_epContours + nbLignesCol*m_tailleBlocs;
 
     m_matBlocs = new Bloc * *[nbLignesCol];
     for (int i = 0; i < nbLignesCol; i++) {
@@ -23,7 +23,7 @@ Grille::Grille(Coordonnees coord, int tailleGrille, int nbLignesCol) {
 Grille::Grille(const Grille& g) {
     m_nbBlocs = g.m_nbBlocs;
     m_coord = g.m_coord;
-    m_tailleGrille = g.m_tailleGrille;
+    m_taille = g.m_taille;
     m_nbLignesCol = g.m_nbLignesCol;
     m_tailleBlocs = g.m_tailleBlocs;
     m_epContours = g.m_epContours;
@@ -61,7 +61,7 @@ Grille& Grille::operator=(const Grille& g) {
         // Recopie du contenu de la grille à assigner
         m_nbBlocs = g.m_nbBlocs;
         m_coord = g.m_coord;
-        m_tailleGrille = g.m_tailleGrille;
+        m_taille = g.m_taille;
         m_nbLignesCol = g.m_nbLignesCol;
         m_tailleBlocs = g.m_tailleBlocs;
         m_epContours = g.m_epContours;
@@ -352,17 +352,17 @@ void Grille::dessiner(QPainter *p) {
         // rectangle")
 
         // Traçage de la colonne
-        p->fillRect(x + i*(m_tailleBlocs + m_epContours), y, m_epContours, m_tailleGrille, QColor("#898080"));
+        p->fillRect(x + i*(m_tailleBlocs + m_epContours), y, m_epContours, m_taille, QColor("#898080"));
 
         // Traçage de la ligne
-        p->fillRect(x, y + i*(m_tailleBlocs + m_epContours), m_tailleGrille, m_epContours, QColor("#898080"));
+        p->fillRect(x, y + i*(m_tailleBlocs + m_epContours), m_taille, m_epContours, QColor("#898080"));
     }
 }
 
 void Grille::afficherPerdu(QPainter *p) {
     int x = m_coord.getX(), y = m_coord.getY();
 
-    QRect grille(x, y, m_tailleGrille, m_tailleGrille);
+    QRect grille(x, y, m_taille, m_taille);
 
     QColor couleur = Qt::gray;
     couleur.setAlphaF(0.7);
@@ -370,7 +370,7 @@ void Grille::afficherPerdu(QPainter *p) {
     p->fillRect(grille, couleur);
 
     p->setPen(QPen(QColor("#000000")));
-    p->setFont(QFont("Arial", m_tailleGrille/7, QFont::Bold));
+    p->setFont(QFont("Arial", m_taille/7, QFont::Bold));
 
     p->drawText(grille, Qt::AlignCenter, "Perdu!");
 }

@@ -20,7 +20,7 @@ protected :
     Bloc*** m_matBlocs; /* Matrice de pointeurs vers des objets de type "Bloc" : cette matrice correspond à la grille */
     int m_nbBlocs; /* Nombre de blocs non nuls dans la grille à un instant t (nombre de cases non vides) */
     Coordonnees m_coord; /* Coordonnées x (abscisse) et y (ordonnée) de la grille exprimées en pixel */
-    int m_tailleGrille; /* Largeur et hauteur de la grille en pixel (la grille est un carré). Par taille, on entend la longueur en pixel entre le
+    int m_taille; /* Largeur et hauteur de la grille en pixel (la grille est un carré). Par taille, on entend la longueur en pixel entre le
             l'extérieur du contour gauche de la grille et l'extérieur du bord droit de la grille (ou du bord bas et du bord haut) */
     int m_nbLignesCol; /* Nombre de lignes et de colonnes de la grille : si m_nbLignesCol = 4, alors la grille est de taille 4x4 */
     int m_tailleBlocs; /* Taille de tous les blocs de la grille (ils font tous la même taille)
@@ -31,7 +31,7 @@ protected :
 
     // Déclaration des méthodes
 public :
-    Grille(Coordonnees coord, int tailleGrille = 120, int nbLignesCol = 4); /* Constructeur par défaut */
+    Grille(Coordonnees coord = Coordonnees(), int taille = 120, int nbLignesCol = 4); /* Constructeur par défaut */
     Grille(const Grille& grille); /* Constructeur de recopie */
     ~Grille(); /* Destructeur */
 
@@ -79,7 +79,7 @@ public :
             Le paramètre test_finie vaut true uniquement si cette méthode "déplacerBlocs" est appelée par la méthode "est_finie" (si on souhaite savoir si
             la partie est terminée) */
     bool estFinie(); /* Retourne true si le partie est terminée et false si il y a encore des déplacements possibles. On vérifie si la partie est finie
-            à chaque tour ou la grille est remplie de blocs numérotés, c'est à dire à chaque tour ou m_nbBlocs = m_tailleGrille*m_tailleGrille */
+            à chaque tour ou la grille est remplie de blocs numérotés, c'est à dire à chaque tour ou m_nbBlocs = m_taille*m_taille */
     void dessiner(QPainter *p); /* Dessine la grille, c'est à dire tous les contours des blocs. Tous les contours ont la même épaisseur, que ce soit
             ceux sur les bords ou ceux à l'intérieur (qui séparent les blocs) */
     void afficherPerdu(QPainter *p); /* Affiche le message de fin quand la partie est perdue */

@@ -38,6 +38,29 @@ void Score::dessiner(QPainter *p) {
     int y_rect_valeur = y_rect_texte + hauteur_rect_texte, hauteur_rect_valeur = m_hauteur - y_rect_valeur + y;
     QRect rect_valeur(x, y_rect_valeur, m_largeur, hauteur_rect_valeur);
 
-    p->setFont(QFont("Arial", hauteur_rect_valeur*0.4, QFont::Bold));
+    // Définition de la police d'écriture de la valeur du score
+    // En effet, il faut réduire la taille de la police en fonction du log10 de la valeur du score (du nombre de chiffre dans la valeur)
+    int log_valeur = log10(m_score), taille_police;
+    switch (log_valeur) {
+    case 1:
+        taille_police = hauteur_rect_valeur*0.5;
+        break;
+    case 2:
+        taille_police = hauteur_rect_valeur*0.45;
+        break;
+    case 3:
+        taille_police = hauteur_rect_valeur*0.4;
+        break;
+    case 4:
+        taille_police = hauteur_rect_valeur*0.35;
+        break;
+    case 5:
+        taille_police = hauteur_rect_valeur*0.3;
+        break;
+    default :
+        taille_police = hauteur_rect_valeur*0.55;
+    }
+
+    p->setFont(QFont("Arial", taille_police, QFont::Bold));
     p->drawText(rect_valeur, Qt::AlignCenter, QString::number(m_score));
 }

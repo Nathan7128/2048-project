@@ -6,21 +6,38 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    m_largeur = 1200;
+    m_hauteur = 600;
     m_estFinie = 0;
+
+    this->resize(m_largeur, m_hauteur);
+
+    // Instanciation de la grille
+    int taille_grille = m_hauteur*0.9;
+    int x_grille = m_largeur/15, y_grille = (m_hauteur - taille_grille)/2;
+    Coordonnees coord_grille(x_grille, y_grille);
+
+    m_grille = new Grille(coord_grille, taille_grille, 4);
+
+    // Instanciation du score
+    int espace_droite_grille = m_largeur - taille_grille - x_grille; /* Espace restant, horizontalement, à droite de la grille */
+    int largeur_score = (m_largeur - espace_droite_grille)/3, hauteur_score = m_hauteur/6;
+    int x_score = m_largeur - espace_droite_grille/2 - largeur_score/2, y_score = (m_hauteur - hauteur_score)/2;
+    Coordonnees coord_score(x_score, y_score);
+
+    m_score = new Score(coord_score, largeur_score, hauteur_score);
+
+    // Initialisation de la grille et attribution du score
+    m_grille->initialiserGrille();
+    m_grille->setScore(m_score);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete m_grille;
-}
-
-void MainWindow::setGrille(Grille * grille) {
-    m_grille = grille;
-}
-
-void MainWindow::setScore(Score * score) {
-    m_score = score;
+    delete m_score;
 }
 
 void MainWindow::paintEvent(QPaintEvent * e) {
@@ -30,22 +47,25 @@ void MainWindow::paintEvent(QPaintEvent * e) {
     // Mettre le fond en blanc
     painter.fillRect(this->rect(), Qt::white);
 
-    int nb_lignes_col = m_grille->getNbLignesCol();
+    QRect rect_test(0, 0, 100, 100);
+    painter.fillRect(rect_test, Qt::red);
 
-    m_grille->dessiner(&painter);
+    int nb_lignes_col = m_grille->getNbLignesCol(); /* Taille de la grille en bloc */
 
+    m_grille->dessiner(&painter); /* Affichage de la grille sans les blocs */
+
+    // Affichage des blocs
     for (int i = 0; i < nb_lignes_col; i++) {
         for (int j = 0; j < nb_lignes_col; j++) {
             m_grille->getBloc(i, j)->dessiner(&painter);
         }
     }
 
+    // Affichage du score
     m_score->dessiner(&painter);
 
-    m_estFinie = m_grille->estFinie();
-
     if (m_estFinie) {
-        m_grille->afficherPerdu(&painter);
+        m_grille->afficherPerdu(&painter); /* Affichage du message de défaite si la partie est finie */
     }
 }
 
@@ -71,11 +91,11 @@ void MainWindow::keyPressEvent(QKeyEvent * event) {
 
         m_grille->deplacerBlocs(direction);
 
+        m_estFinie = m_grille->estFinie(); /* On regarde si la partie est finie après chaque déplacement */
+
         this->repaint();
     }
 }
-
-
 
 
 

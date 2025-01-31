@@ -22,7 +22,7 @@ protected :
 
     // Méthodes publiques
 public:
-    Score(Coordonnees coord = Coordonnees(0, 0), int largeur = 150, int hauteur = 80); /* Constructeur par défaut */
+    Score(Coordonnees coord = Coordonnees(), int largeur = 150, int hauteur = 80); /* Constructeur par défaut */
 
     void modifierScore(int valeur); /* Modifie le score en lui ajoutant une valeur passée en paramètre */
     void dessiner(QPainter *p); /* Dessine le score dans la fenêtre principale */

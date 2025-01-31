@@ -19,21 +19,20 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-    // Mutateurs
-    void setGrille(Grille * grille); /* Défini l'attribut m_grille avec un pointeur vers une grille passé en paramètre */
-    void setScore(Score * score); /* Défini l'attribut m_score avec un pointeur vers un score passé en paramètre */
-
 private:
     // Attributs privés
     Ui::MainWindow *ui;
-    Grille * m_grille; /* Grille utilisée pour jouer la partie */
 
+    Grille * m_grille; /* Grille utilisée pour jouer la partie */
     Score * m_score; /* Pointeur vers le score de la partie */
+    int m_largeur; /* Largeur de la fenêtre */
+    int m_hauteur; /* Hauteur de la fenêtre */
     int m_estFinie; /* Vaut 0 si la partie est en cours et 1 si elle est terminée */
+
+    // Méthodes publiques
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
     // Overriding
     void paintEvent(QPaintEvent * e); /* Redéfinition de la méthode permettant de dessiner la fenêtre */

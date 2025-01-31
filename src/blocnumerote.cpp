@@ -5,7 +5,25 @@
 BlocNumerote::BlocNumerote(Coordonnees coord, int valeur, int taille_bloc):Bloc(coord, taille_bloc) {
     m_type = 2;
     m_valeur = valeur;
-    m_font = QFont("Arial", taille_bloc/2.5, QFont::Bold);
+
+    // Définition de la police d'écriture
+    int log_valeur = log10(valeur), taille_police;
+    switch (log_valeur) {
+    case 0:
+        taille_police = taille_bloc*0.45;
+        break;
+    case 1:
+        taille_police = taille_bloc*0.4;
+        break;
+    case 2:
+        taille_police = taille_bloc*0.35;
+        break;
+    case 3:
+        taille_police = taille_bloc*0.3;
+        break;
+    }
+
+    m_font = QFont("Arial", taille_police, QFont::Bold);
 
     // Attribution de la couleur du bloc à l'aide d'un switch en fonction de la valeur
     switch (valeur) {
@@ -41,6 +59,9 @@ BlocNumerote::BlocNumerote(Coordonnees coord, int valeur, int taille_bloc):Bloc(
         break;
     case 2048 :
         m_couleur = QColor("#edc22e");
+        break;
+    case 4096 :
+        m_couleur = QColor("#8f50e7");
         break;
     default :
         m_couleur = QColor("#000000");
