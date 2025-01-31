@@ -5,10 +5,8 @@
 
 #include "blocnumerote.h"
 #include "blocnul.h"
-#include <string.h>
 #include "score.h"
 
-using namespace std;
 
 
 
@@ -42,6 +40,7 @@ public :
     Bloc * getBloc(int i, int j); /* Renvoie le pointeur de bloc contenu dans la case située à la ligne i et la colonne j */
     int getNbBlocs(); /* Renvoie le nombre de blocs numérotés actuellement présents dans la grille */
     int getNbLignesCol();
+    int getTaille();
 
     // Mutateurs
     void setBloc(int i, int j, Bloc * bloc); /* Place un bloc à la ligne i et la colonne j de la grille */

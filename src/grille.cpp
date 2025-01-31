@@ -4,13 +4,22 @@
 
 Grille::Grille(Coordonnees coord, int taille, int nbLignesCol) {
     m_nbBlocs = 0;
-    m_coord = coord;
-    m_taille = taille;
     m_nbLignesCol = nbLignesCol;
-    m_epContours = taille / (8 * nbLignesCol + 1);
-    m_tailleBlocs = 7 * m_epContours;
+
+    int facteur_blocs_countours = 7; /* On souhaite que la taille des blocs soit 7 plus grande que l'épaisseur des contours */
+    m_epContours = taille / ((facteur_blocs_countours + 1)*nbLignesCol + 1);
+    m_tailleBlocs = facteur_blocs_countours*m_epContours;
+
+    // On redéfinit ensuite la taille de la grille en fonction de la taille des blocs et de l'épaisseur des contours calculés
     m_taille = (nbLignesCol + 1)*m_epContours + nbLignesCol*m_tailleBlocs;
 
+    // Il faut donc réajuster la position en abscisse de la grille pour qu'elle soit bien centrée au milieu de la fenêtre
+    int nouveau_y = coord.getY() - (m_taille - taille)/2; /* Décalage a effectuer en fonction de la différence de taille entre la taille de la grille
+            passée en paramètre et la taille ajustée en fonction de la taille des blocs et de l'épaisseur des contours calculés */
+    coord.setY(nouveau_y);
+    m_coord = coord;
+
+    // Allocation de la mémoire pour la matrice de pointeurs vers des blocs
     m_matBlocs = new Bloc * *[nbLignesCol];
     for (int i = 0; i < nbLignesCol; i++) {
         m_matBlocs[i] = new Bloc * [nbLignesCol];
@@ -87,6 +96,10 @@ int Grille::getNbBlocs() {
 
 int Grille::getNbLignesCol() {
     return m_nbLignesCol;
+}
+
+int Grille::getTaille() {
+    return m_taille;
 }
 
 void Grille::setBloc(int i, int j, Bloc * bloc) {

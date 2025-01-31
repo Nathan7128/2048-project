@@ -3,6 +3,9 @@
 
 
 BlocNumerote::BlocNumerote(Coordonnees coord, int valeur, int taille_bloc):Bloc(coord, taille_bloc) {
+    if (log2(valeur) != int(log2(valeur))) {
+        throw ExceptionValeurBloc("Erreur constructeur bloc numéroté : la valeur du bloc n'est pas une puissance de 2");
+    }
     m_type = 2;
     m_valeur = valeur;
 

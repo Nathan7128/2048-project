@@ -23,6 +23,7 @@ HEADERS += \
     blocnul.h \
     blocnumerote.h \
     coordonnees.h \
+    exceptions.h \
     grille.h \
     mainwindow.h \
     score.h

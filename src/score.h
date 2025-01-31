@@ -5,7 +5,6 @@
 
 #include <QPainter>
 #include "coordonnees.h"
-#include <QLabel>
 
 
 

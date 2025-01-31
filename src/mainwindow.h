@@ -27,7 +27,8 @@ private:
     Score * m_score; /* Pointeur vers le score de la partie */
     int m_largeur; /* Largeur de la fenêtre */
     int m_hauteur; /* Hauteur de la fenêtre */
-    int m_estFinie; /* Vaut 0 si la partie est en cours et 1 si elle est terminée */
+    int m_estFinie; /* Vaut 0 si la partie est en cours et 1 si elle est terminée.
+        La partie est finie si la grille est remplie et le joueur ne peut plus effectuer de déplacement, il n'est pas possible de gagner une partie */
 
     // Méthodes publiques
 public:

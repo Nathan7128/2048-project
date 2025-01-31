@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QThread>
+
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -7,22 +10,32 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    m_largeur = 1200;
-    m_hauteur = 600;
+    m_largeur = 1000;
+    m_hauteur = 700;
+
+    int min_hauteur_largeur = min(m_hauteur, m_largeur);
+
     m_estFinie = 0;
 
     this->resize(m_largeur, m_hauteur);
 
     // Instanciation de la grille
-    int taille_grille = m_hauteur*0.9;
-    int x_grille = m_largeur/15, y_grille = (m_hauteur - taille_grille)/2;
+    int taille_grille = min_hauteur_largeur*0.85; /* La taille de la grille correspond à la distance entre l'extérieur gauche du bord gauche et
+            l'extérieur droit du bord droit, et c'est distance est donc égale à la distance entre l'extérieur haut du bord haut et l'extérieur bas du
+            bord bas.
+            Elle est proportionelle au minimum entre la hauteur et la largeur de la fenêtre (pour ne pas qu'elle dépasse de la fenêtre) */
+    int x_grille = m_largeur/20, y_grille = (m_hauteur - taille_grille)/2;
     Coordonnees coord_grille(x_grille, y_grille);
 
     m_grille = new Grille(coord_grille, taille_grille, 4);
 
+    // On récupère ensuite la taille de la grille qui a été ajustée dans le constructeur en fonction de la taille des blocs et de l'épaisseur des
+    // contours calculés
+    taille_grille = m_grille->getTaille();
+
     // Instanciation du score
     int espace_droite_grille = m_largeur - taille_grille - x_grille; /* Espace restant, horizontalement, à droite de la grille */
-    int largeur_score = (m_largeur - espace_droite_grille)/3, hauteur_score = m_hauteur/6;
+    int largeur_score = espace_droite_grille/2, hauteur_score = m_hauteur/6;
     int x_score = m_largeur - espace_droite_grille/2 - largeur_score/2, y_score = (m_hauteur - hauteur_score)/2;
     Coordonnees coord_score(x_score, y_score);
 
@@ -46,9 +59,6 @@ void MainWindow::paintEvent(QPaintEvent * e) {
 
     // Mettre le fond en blanc
     painter.fillRect(this->rect(), Qt::white);
-
-    QRect rect_test(0, 0, 100, 100);
-    painter.fillRect(rect_test, Qt::red);
 
     int nb_lignes_col = m_grille->getNbLignesCol(); /* Taille de la grille en bloc */
 
@@ -94,6 +104,8 @@ void MainWindow::keyPressEvent(QKeyEvent * event) {
         m_estFinie = m_grille->estFinie(); /* On regarde si la partie est finie après chaque déplacement */
 
         this->repaint();
+
+        // utiliser KeyRelease pour déplacer les blocs seulement si on a relaché la touche
     }
 }
 
