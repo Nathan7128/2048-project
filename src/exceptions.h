@@ -19,11 +19,11 @@ public:
     ExceptionCoordNeg(string m = "") {m_message = m;};
 };
 
-// Exception si la ligne/colonne indiquée pour un élément de la matrice de la grille est négative
-class ExceptionLigneColNeg {
+// Exception si la ligne/colonne indiquée pour un élément de la matrice de la grille est négative ou >= au nombre de lignes/colonnes de la grille
+class ExceptionLigneCol {
 public:
     string m_message;
-    ExceptionLigneColNeg(string m = "") {m_message = m;};
+    ExceptionLigneCol(string m = "") {m_message = m;};
 };
 
 // Exception si le nombre de lignes (= nombre de colonnes) de la grille du 2048 est < 2

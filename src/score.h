@@ -5,6 +5,7 @@
 
 #include <QPainter>
 #include "coordonnees.h"
+#include "exceptions.h"
 
 
 

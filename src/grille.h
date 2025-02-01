@@ -37,34 +37,35 @@ public :
     Grille& operator=(const Grille& g);
 
     // Accesseurs
-    Bloc * getBloc(int i, int j); /* Renvoie le pointeur de bloc contenu dans la case située à la ligne i et la colonne j */
+    Bloc * getBloc(int ligne, int colonne); /* Renvoie le pointeur de bloc contenu dans la case située à la ligne "ligne" et la colonne "colonne" */
     int getNbBlocs(); /* Renvoie le nombre de blocs numérotés actuellement présents dans la grille */
     int getNbLignesCol();
     int getTaille();
 
     // Mutateurs
-    void setBloc(int i, int j, Bloc * bloc); /* Place un bloc à la ligne i et la colonne j de la grille */
+    void setBloc(int ligne, int colonne, Bloc * bloc); /* Place un bloc à la ligne "ligne" et la colonne "colonne" de la grille */
     void setScore(Score * score);
 
-    Coordonnees convertirCoordBloc(int i, int j); /* Permet de convertir des coordonnées d'un bloc exprimées en ligne et colonne en coordonnées
-            exprimées en pixel */
+    Coordonnees convertirCoordBloc(int ligne, int colonne); /* Permet de convertir des coordonnées d'un bloc exprimées en ligne et colonne en
+            coordonnées exprimées en pixel */
     void nouveauBlocNum(); /* Place un nouveau bloc numéroté dans la grille avec une valeur aléatoirement choisie parmi 2 et 4 (avec des probabilités
             respectivement égales à 3/4 et 1/4. Lorsqu'on créé un nouveau bloc numéroté, il est placé aléatoirement.
             On va donc déterminer dans cette méthode la case ou va se trouver ce nouveau bloc */
     void initialiserGrille(); /* Initialise la grille en la remplissant de blocs nuls et de 2 blocs numérotés placés aléatoirement dans la grille */
-    void transfererBloc(int i_old, int j_old, int i_new, int j_new); /* Déplace un bloc numéroté situé à la ligne i et la colonne j de la grille
-            jusqu'à la ligne i_new et la colonne j_new de la grille. Le déplacement est effectué dans le cas ou le bloc est déplacé jusqu'à un bord ou
-            jusqu'au prochain bloc numéroté qui lui bloque le déplacement (avec lequel il ne peut pas fusionner) */
-    void fusionnerBlocs(int i_bloc_depl, int j_bloc_depl, int i_bloc_fus, int j_bloc_fus); /* Fusionne 2 blocs numérotés de la grille.
+    void transfererBloc(int ligne_old, int colonne_old, int ligne_new, int colonne_new);
+            /* Déplace un bloc numéroté situé à la ligne "ligne_old" et la colonne "colonne_old" de la grille jusqu'à la ligne "ligne_new" et la
+            colonne "colonne_new" de la grille. Le déplacement est effectué dans le cas ou le bloc est déplacé jusqu'à un bord ou jusqu'au prochain
+            bloc numéroté qui lui bloque le déplacement (avec lequel il ne peut pas fusionner) */
+    void fusionnerBlocs(int ligne_depl, int colonne_depl, int ligne_fus, int colonne_fus); /* Fusionne 2 blocs numérotés de la grille.
             Une fusion est le fait de déplacer un bloc numéroté vers un autre bloc numéroté qui possède la même valeur, et ainsi
             obtenir un nouveau bloc numéroté d'une valeur égale à deux fois la valeur des blocs à fusionner.
-            Les entiers "i_bloc_depl" et "j_bloc_depl" correspondent à la ligne et la colonne de la case qui contient le pointeur vers le
+            Les entiers "ligne_depl" et "colonne_depl" correspondent à la ligne et la colonne de la case qui contient le pointeur vers le
             bloc à déplacer. Après avoir déplacer et fusionner ce bloc, on va placer un pointeur vers un bloc nul dans la case qui le
             contenait.
-            Les entiers "i_bloc_fus" et "j_bloc_fus" correspondent à la ligne et la colonne de la case qui contient le pointeur vers le
+            Les entiers "ligne_fus" et "colonne_fus" correspondent à la ligne et la colonne de la case qui contient le pointeur vers le
             bloc qui va être fusionner avec le bloc à déplacer. Ce bloc sera donc remplacé par le bloc résultant de la fusion réalisée. */
-    bool deplacerBloc(int i, int j, char direction, bool test_finie = false); /* Déplace un bloc numéroté situé à la ligne i et la colonne j de la
-            grille dans une direction. Retourne true si le bloc a été déplacé été false sinon.
+    bool deplacerBloc(int ligne, int colonne, char direction, bool test_finie = false); /* Déplace un bloc numéroté situé à la ligne "ligne" et la
+            colonne "colonne" de la grille dans une direction. Retourne true si le bloc a été déplacé été false sinon.
             Le paramètre "test_finie" permet d'indiquer si on utilise la méthode pour réellement déplacer un bloc ou pour savoir si le bloc est
             déplaçable. En effet, lorsqu'on souhaitera tester si la partie est finie (s'il n'y a plus de déplacement possible), on voudra essayer de
             déplacer chaque bloc dans chaque direction, sans pour autont effectuer le déplacement. Ce paramètre vaut false si on souhaite réellement
@@ -75,8 +76,8 @@ public :
             bord de la grille) et ne pourrons pas être déplacés dans tous les cas. Par exemple, si on déplace les blocs vers la droite, on n'essaiera
             pas de déplacer les blocs de la colonne la plus à droite.
             Cette méthode retourne true si au moins un bloc a été déplacé et false sinon.
-            Le paramètre test_finie vaut true uniquement si cette méthode "déplacerBlocs" est appelée par la méthode "est_finie" (si on souhaite savoir si
-            la partie est terminée) */
+            Le paramètre test_finie vaut true uniquement si cette méthode "déplacerBlocs" est appelée par la méthode "est_finie" (si on souhaite savoir
+            si la partie est terminée) */
     bool estFinie(); /* Retourne true si le partie est terminée et false si il y a encore des déplacements possibles. On vérifie si la partie est finie
             à chaque tour ou la grille est remplie de blocs numérotés, c'est à dire à chaque tour ou m_nbBlocs = m_taille*m_taille */
     void dessiner(QPainter *p); /* Dessine la grille, c'est à dire tous les contours des blocs. Tous les contours ont la même épaisseur, que ce soit

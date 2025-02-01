@@ -3,10 +3,18 @@
 
 
 Score::Score(Coordonnees coord, int largeur, int hauteur) {
-    m_coord = coord;
-    m_largeur = largeur;
-    m_hauteur = hauteur;
-    m_score = 0;
+    if (coord.getX() < 0 || coord.getY() < 0) {
+        throw ExceptionCoordNeg("Erreur constructeur du score : coordonnees negatives");
+    }
+    else if (largeur < 0 || hauteur < 0) {
+        throw ExceptionCoordNeg("Erreur constructeur du score : dimension du score negative");
+    }
+    else {
+        m_coord = coord;
+        m_largeur = largeur;
+        m_hauteur = hauteur;
+        m_score = 0;
+    }
 }
 
 void Score::modifierScore(int valeur) {

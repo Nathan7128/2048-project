@@ -3,28 +3,40 @@
 
 
 Grille::Grille(Coordonnees coord, int taille, int nbLignesCol) {
-    m_nbBlocs = 0;
-    m_nbLignesCol = nbLignesCol;
+    if (coord.getX() < 0 || coord.getY() < 0) {
+        throw ExceptionCoordNeg("Erreur constructeur de la grille : coordonnees negatives");
+    }
+    else if (taille < 0) {
+        throw ExceptionCoordNeg("Erreur constructeur de la grille : taille (en pixel) de la grille negative");
+    }
+    else if (nbLignesCol < 2) {
+        throw ExceptionNbLignesCol("Erreur constructeur de la grille : impossible d'instancier une grille"
+                                   " avec un nombre de colonnes/lignes < 2");
+    }
+    else {
+        m_nbBlocs = 0;
+        m_nbLignesCol = nbLignesCol;
 
-    int facteur_blocs_countours = 7; /* On souhaite que la taille des blocs soit 7 plus grande que l'épaisseur des contours */
-    m_epContours = taille / ((facteur_blocs_countours + 1)*nbLignesCol + 1);
-    m_tailleBlocs = facteur_blocs_countours*m_epContours;
+        int facteur_blocs_countours = 7; /* On souhaite que la taille des blocs soit 7 plus grande que l'épaisseur des contours */
+        m_epContours = taille / ((facteur_blocs_countours + 1)*nbLignesCol + 1);
+        m_tailleBlocs = facteur_blocs_countours*m_epContours;
 
-    // On redéfinit ensuite la taille de la grille en fonction de la taille des blocs et de l'épaisseur des contours calculés
-    m_taille = (nbLignesCol + 1)*m_epContours + nbLignesCol*m_tailleBlocs;
+        // On redéfinit ensuite la taille de la grille en fonction de la taille des blocs et de l'épaisseur des contours calculés
+        m_taille = (nbLignesCol + 1)*m_epContours + nbLignesCol*m_tailleBlocs;
 
-    // Il faut donc réajuster la position en abscisse de la grille pour qu'elle soit bien centrée au milieu de la fenêtre
-    int nouveau_y = coord.getY() - (m_taille - taille)/2; /* Décalage a effectuer en fonction de la différence de taille entre la taille de la grille
+        // Il faut donc réajuster la position en abscisse de la grille pour qu'elle soit bien centrée au milieu de la fenêtre
+        int nouveau_y = coord.getY() - (m_taille - taille)/2; /* Décalage a effectuer en fonction de la différence de taille entre la taille de la grille
             passée en paramètre et la taille ajustée en fonction de la taille des blocs et de l'épaisseur des contours calculés */
-    coord.setY(nouveau_y);
-    m_coord = coord;
+        coord.setY(nouveau_y);
+        m_coord = coord;
 
-    // Allocation de la mémoire pour la matrice de pointeurs vers des blocs
-    m_matBlocs = new Bloc * *[nbLignesCol];
-    for (int i = 0; i < nbLignesCol; i++) {
-        m_matBlocs[i] = new Bloc * [nbLignesCol];
-        for (int j = 0; j < m_nbLignesCol; j++) {
-            m_matBlocs[i][j] = NULL;
+        // Allocation de la mémoire pour la matrice de pointeurs vers des blocs
+        m_matBlocs = new Bloc * *[nbLignesCol];
+        for (int i = 0; i < nbLignesCol; i++) {
+            m_matBlocs[i] = new Bloc * [nbLignesCol];
+            for (int j = 0; j < m_nbLignesCol; j++) {
+                m_matBlocs[i][j] = NULL;
+            }
         }
     }
 }
@@ -86,8 +98,13 @@ Grille& Grille::operator=(const Grille& g) {
     return *this;
 }
 
-Bloc* Grille::getBloc(int i, int j) {
-    return m_matBlocs[i][j];
+Bloc* Grille::getBloc(int ligne, int colonne) {
+    if (ligne < 0 || colonne < 0 || ligne >= m_nbLignesCol || colonne >= m_nbLignesCol) {
+        throw ExceptionLigneCol("Erreur methode getBloc : ligne et/ou colonne invalide (< 0 ou >= nombre de lignes/colonnes de la grille");
+    }
+    else {
+        return m_matBlocs[ligne][colonne];
+    }
 }
 
 int Grille::getNbBlocs() {
@@ -102,74 +119,84 @@ int Grille::getTaille() {
     return m_taille;
 }
 
-void Grille::setBloc(int i, int j, Bloc * bloc) {
-    delete m_matBlocs[i][j];
-    m_matBlocs[i][j] = bloc;
+void Grille::setBloc(int ligne, int colonne, Bloc * bloc) {
+    if (ligne < 0 || colonne < 0 || ligne >= m_nbLignesCol || colonne >= m_nbLignesCol) {
+        throw ExceptionLigneCol("Erreur methode setBloc : ligne et/ou colonne invalide (< 0 ou >= nombre de lignes/colonnes de la grille");
+    }
+    else {
+        delete m_matBlocs[ligne][colonne];
+        m_matBlocs[ligne][colonne] = bloc;
+    }
 }
 
 void Grille::setScore(Score * score) {
     m_score = score;
 }
 
-Coordonnees Grille::convertirCoordBloc(int i, int j) {
+Coordonnees Grille::convertirCoordBloc(int ligne, int colonne) {
     int x_grille = m_coord.getX(), y_grille = m_coord.getY();
 
     // Convertion de la ligne et de la colonne du bloc
-    int x_bloc = j * (m_tailleBlocs + m_epContours) + m_epContours + x_grille;
-    int y_bloc = i * (m_tailleBlocs + m_epContours) + m_epContours + y_grille;
+    int x_bloc = colonne * (m_tailleBlocs + m_epContours) + m_epContours + x_grille;
+    int y_bloc = ligne * (m_tailleBlocs + m_epContours) + m_epContours + y_grille;
 
     Coordonnees coordBloc(x_bloc, y_bloc);
     return coordBloc;
 }
 
 void Grille::nouveauBlocNum() {
-    int n_alea = rand()%10, valeurBloc;
-    // Déterminer la valeur aléatoire du bloc
-    // Pour ce faire, on tire un nombre aléatoire compris entre 0 et 9 inclus, si on tire 0 (proba de 1/10) alors on créé un bloc de valeur 4, sinon 2.
-    if (n_alea == 0) {
-        valeurBloc = 4;
+    if (m_nbBlocs == m_nbLignesCol*m_nbLignesCol) {
+        throw ExceptionGrillePleine("Erreur methode nouveauBlocNum : Impossible d'ajouter un bloc car la grille est pleine");
     }
     else {
-        valeurBloc = 2;
-    }
-
-    // Choisir aléatoirement la case (ligne et colonne) ou va se trouver ce nouveau bloc
-    // On sait grâce à l'attribut "m_nbBlocs" combien il nous reste de case libre dans la grille. On va donc tirer un nombre aléatoire entre 1 et
-    // (nombre de cases libres = nombre de blocs nuls dans la grille = m_nbLignesCol**2 - m_nbBlocs)
-    // En fonction de ce nombre choisi, nous allons en déduire la ligne et la colonne ou placer le bloc. Ex : si on tire 2, alors on choisira la 2ème
-    // case libre de la grille. Pour trier les cases, on les trie par ligne puis par colonne. Ex (pour une grille 4*4 : la 2ème case correspond à la
-    // ligne 1 et colonne 2, la 15ème case correspond à la ligne 4 et la colonne 3. (on considère dans cet exemple que la case en haut à gauche
-    // correspond à la ligne 1 et la colonne 1, et non la ligne 0 et la colonne 0 (comme dans le cas ou l'on souhaite accéder aux éléments d'un
-    // tableau en C++).
-    int nbCasesDispo = m_nbLignesCol*m_nbLignesCol - m_nbBlocs;
-    n_alea = rand()%nbCasesDispo + 1; /* Nombre aléatoire entre 1 et et le nombre de cases disponibles */
-
-    // On va maintenant déterminer à quelle ligne et quelle colonne correspond la "n_alea"ème case libre de la grille.
-    // C'est à dire, nous allons récupérer le pointeur de Bloc actuellement contenu dans la case ou l'on va placer le bloc.
-    // Pour cela, nous allons procéder par itération : on traverse une à une les cases de la grille (en procédant ligne par ligne)
-    // On détermine à chaque itération la ligne (i) et la colonne (j) de la case, et si la case contient un bloc nul, on incrémente un compteur de
-    // blocs nuls initialisé à 0. Lorsque le compteur de blocs nuls aura atteint la valeur de "n_alea", on aura donc atteint la case libre souhaitée,
-    // et on connaitra la ligne et la colonne de cette case.
-    // Pour déterminer i, nous prenons la division entière du compteur de blocs parcourus "comptBlocs" par la taille de la grille.
-    // Pour déterminer j, nous prenons le reste de la division du compteur de blocs parcourus "comptBlocs" par la taille de la grille.
-    int comptBlocsNuls = 0, comptBlocs = 0, i = 0, j = 0;
-    Bloc* bloc_temp;
-    while (comptBlocsNuls < n_alea) {
-        i = comptBlocs/m_nbLignesCol;
-        j = comptBlocs%m_nbLignesCol;
-        bloc_temp = getBloc(i, j);
-        if (bloc_temp->getType() == 1) {
-            comptBlocsNuls++;
+        int n_alea = rand()%10, valeurBloc;
+        // Déterminer la valeur aléatoire du bloc
+        // Pour ce faire, on tire un nombre aléatoire compris entre 0 et 9 inclus, si on tire 0 (proba de 1/10) alors on créé un bloc de valeur 4, sinon 2.
+        if (n_alea == 0) {
+            valeurBloc = 4;
         }
-        comptBlocs++;
-    }
+        else {
+            valeurBloc = 2;
+        }
 
-    // La variable bloc_temp est donc le pointeur de Bloc situé dans la case ou l'on veut placer le bloc.
-    Coordonnees coord = convertirCoordBloc(i, j);
-    BlocNumerote * new_bloc;
-    new_bloc = new BlocNumerote(coord, valeurBloc, m_tailleBlocs);
-    setBloc(i, j, new_bloc);
-    m_nbBlocs++;
+        // Choisir aléatoirement la case (ligne et colonne) ou va se trouver ce nouveau bloc
+        // On sait grâce à l'attribut "m_nbBlocs" combien il nous reste de case libre dans la grille. On va donc tirer un nombre aléatoire entre 1 et
+        // (nombre de cases libres = nombre de blocs nuls dans la grille = m_nbLignesCol**2 - m_nbBlocs)
+        // En fonction de ce nombre choisi, nous allons en déduire la ligne et la colonne ou placer le bloc. Ex : si on tire 2, alors on choisira la 2ème
+        // case libre de la grille. Pour trier les cases, on les trie par ligne puis par colonne. Ex (pour une grille 4*4 : la 2ème case correspond à la
+        // ligne 1 et colonne 2, la 15ème case correspond à la ligne 4 et la colonne 3. (on considère dans cet exemple que la case en haut à gauche
+        // correspond à la ligne 1 et la colonne 1, et non la ligne 0 et la colonne 0 (comme dans le cas ou l'on souhaite accéder aux éléments d'un
+        // tableau en C++).
+        int nbCasesDispo = m_nbLignesCol*m_nbLignesCol - m_nbBlocs;
+        n_alea = rand()%nbCasesDispo + 1; /* Nombre aléatoire entre 1 et et le nombre de cases disponibles */
+
+        // On va maintenant déterminer à quelle ligne et quelle colonne correspond la "n_alea"ème case libre de la grille.
+        // C'est à dire, nous allons récupérer le pointeur de Bloc actuellement contenu dans la case ou l'on va placer le bloc.
+        // Pour cela, nous allons procéder par itération : on traverse une à une les cases de la grille (en procédant ligne par ligne)
+        // On détermine à chaque itération la ligne (i) et la colonne (j) de la case, et si la case contient un bloc nul, on incrémente un compteur de
+        // blocs nuls initialisé à 0. Lorsque le compteur de blocs nuls aura atteint la valeur de "n_alea", on aura donc atteint la case libre souhaitée,
+        // et on connaitra la ligne et la colonne de cette case.
+        // Pour déterminer i, nous prenons la division entière du compteur de blocs parcourus "comptBlocs" par la taille de la grille.
+        // Pour déterminer j, nous prenons le reste de la division du compteur de blocs parcourus "comptBlocs" par la taille de la grille.
+        int comptBlocsNuls = 0, comptBlocs = 0, i = 0, j = 0;
+        Bloc* bloc_temp;
+        while (comptBlocsNuls < n_alea) {
+            i = comptBlocs/m_nbLignesCol;
+            j = comptBlocs%m_nbLignesCol;
+            bloc_temp = getBloc(i, j);
+            if (bloc_temp->getType() == 1) {
+                comptBlocsNuls++;
+            }
+            comptBlocs++;
+        }
+
+        // La variable bloc_temp est donc le pointeur de Bloc situé dans la case ou l'on veut placer le bloc.
+        Coordonnees coord = convertirCoordBloc(i, j);
+        BlocNumerote * new_bloc;
+        new_bloc = new BlocNumerote(coord, valeurBloc, m_tailleBlocs);
+        setBloc(i, j, new_bloc);
+        m_nbBlocs++;
+    }
 }
 
 void Grille::initialiserGrille() {
@@ -186,115 +213,142 @@ void Grille::initialiserGrille() {
     nouveauBlocNum();
 }
 
-void Grille::transfererBloc(int i_old, int j_old, int i_new, int j_new) {
-    BlocNumerote * bloc_depl = (BlocNumerote*)getBloc(i_old, j_old);
-    BlocNul * new_bloc_nul;
-    Coordonnees coord_old = convertirCoordBloc(i_old, j_old);
-    Coordonnees coord_new = convertirCoordBloc(i_new, j_new);
-
-    new_bloc_nul = new BlocNul(coord_old, m_tailleBlocs);
-    m_matBlocs[i_old][j_old] = new_bloc_nul;
-
-    bloc_depl->setCoord(coord_new);
-    setBloc(i_new, j_new, bloc_depl);
-}
-
-void Grille::fusionnerBlocs(int i_bloc_depl, int j_bloc_depl, int i_bloc_fus, int j_bloc_fus) {
-    BlocNumerote * bloc_depl = (BlocNumerote*)getBloc(i_bloc_depl, j_bloc_depl), * bloc_fus = (BlocNumerote*)getBloc(i_bloc_fus, j_bloc_fus);
-
-    BlocNul * bloc_nul = new BlocNul(bloc_depl->getCoord(), m_tailleBlocs);
-
-    int new_valeur = 2 * bloc_fus->getValeur();
-
-    BlocNumerote * new_bloc = new BlocNumerote(bloc_fus->getCoord(), new_valeur, m_tailleBlocs);
-    setBloc(i_bloc_depl, j_bloc_depl, bloc_nul);
-    setBloc(i_bloc_fus, j_bloc_fus, new_bloc);
-    m_nbBlocs--;
-
-    m_score->modifierScore(new_valeur);
-}
-
-bool Grille::deplacerBloc(int i, int j, char direction, bool test_finie) {
-    int i_new = i, j_new = j, i_fus = i, j_fus = j;
-    // bool_bord nous permettra de savoir s'il y a un bloc numéroté entre le bloc à déplacer et le bord (on regarde un des bords en fonction de la
-    // direction.
-    // est_bloque nous permettra de savoir si le bloc à déplacer est cote à cote (suivant la direction choisie) avec un autre bloc numéroté ou s'il est au bord de la grille.
-    // Cela ne veut pas dire que le bloc ne pourra pas être déplacé car il peut être à coté d'un bloc numéroté d'une même valeur et être fusionné
-    bool bool_bord, est_bloque;
-    BlocNumerote * bloc_depl = (BlocNumerote*)getBloc(i, j); /* bloc_depl est le bloc à déplacer */
-    switch (direction) {
-        // Direction droite
-    case 'd' :
-        while (j_new + 1 < m_nbLignesCol && getBloc(i, j_new + 1)->getType() == 1) {
-            j_new++;
-        }
-        j_fus = j_new + 1;
-        bool_bord = j_fus >= m_nbLignesCol;
-        break;
-        // Direction gauche
-    case 'g' :
-        while (j_new - 1 >= 0 && getBloc(i, j_new - 1)->getType() == 1) {
-            j_new--;
-        }
-        j_fus = j_new - 1;
-        bool_bord = j_fus < 0;
-        break;
-        // Direction haut
-    case 'h' :
-        while (i_new - 1 >= 0 && getBloc(i_new - 1, j)->getType() == 1) {
-            i_new--;
-        }
-        i_fus = i_new - 1;
-        bool_bord = i_fus < 0;
-        break;
-        // Direction bas
-    case 'b' :
-        while (i_new + 1 < m_nbLignesCol && getBloc(i_new + 1, j)->getType() == 1) {
-            i_new++;
-        }
-        i_fus = i_new + 1;
-        bool_bord = i_fus >= m_nbLignesCol;
-        break;
+void Grille::transfererBloc(int ligne_old, int colonne_old, int ligne_new, int colonne_new) {
+    if (ligne_old < 0 || colonne_old < 0 || ligne_old >= m_nbLignesCol || colonne_old >= m_nbLignesCol) {
+        throw ExceptionLigneCol("Erreur methode transfererBloc : ligne et/ou colonne de l'ancienne case du bloc invalide"
+                                "(< 0 ou >= nombre de lignes/colonnes de la grille");
     }
-
-    est_bloque = i == i_new && j == j_new;
-
-    // Cas ou il n'y a aucun bloc numéroté entre le bloc à déplacer et le bord (dans la direction ou l'on déplace le bloc)
-    // Étant donne qu'on n'essaye jamais de déplacer les blocs au bord de la grille, si bool_bord vaut true alors on déplace forcément le bloc
-    // d'au moins une case
-    if (bool_bord) {
-        if (!test_finie) {
-            transfererBloc(i, j, i_new, j_new);
-        }
-        return true;
+    else if (ligne_new < 0 || colonne_new < 0 || ligne_new >= m_nbLignesCol || colonne_new >= m_nbLignesCol) {
+        throw ExceptionLigneCol("Erreur methode transfererBloc : ligne et/ou colonne de la nouvelle case du bloc invalide"
+                                "(< 0 ou >= nombre de lignes/colonnes de la grille");
     }
-
-    // Cas ou le bloc à déplacer est bloqué par un autre bloc numéroté
-    // Il n'y a pas besoin de vérifier que le bloc est bloqué par un autre bloc numéroté car on à vérifier avec le if précédent si il n'y avait que
-    // des cases libres entre le bloc à déplacer et le bord. S'il n'y a pas que des cases libres, cela signifie donc qu'il y a un bloc numéroté
     else {
-        // On récupère le pointeur vers le bloc numéroté qui bloque le bloc à déplacer
-        BlocNumerote * bloc_fus = (BlocNumerote*)getBloc(i_fus, j_fus);
+        BlocNumerote * bloc_depl = (BlocNumerote*)getBloc(ligne_old, colonne_old);
+        BlocNul * new_bloc_nul;
+        Coordonnees coord_old = convertirCoordBloc(ligne_old, colonne_old);
+        Coordonnees coord_new = convertirCoordBloc(ligne_new, colonne_new);
 
-        // Cas ou on peut fusionner le bloc à déplacer avec le bloc qui le bloque
-        if (bloc_fus->getValeur() == bloc_depl->getValeur()) {
-            if (!test_finie) {
-                fusionnerBlocs(i, j, i_fus, j_fus);
-            }
-            return true;
-        }
+        new_bloc_nul = new BlocNul(coord_old, m_tailleBlocs);
+        m_matBlocs[ligne_old][colonne_old] = new_bloc_nul;
 
-        // Cas ou on ne peut pas les fusionner, et il y'a au moins une case libre entre ces 2 blocs
-        // S'il ces deux blocs sont cotes à cotes (s'il n'y a pas de case libre entre les deux), il n'y a aucun déplacement à effectuer.
-        // C'est ce qu'on vérifie avec la condition du else if
-        else if (!est_bloque) {
-            if (!test_finie) {
-                transfererBloc(i, j, i_new, j_new);
-            }
-            return true;
-        }
+        bloc_depl->setCoord(coord_new);
+        setBloc(ligne_new, colonne_new, bloc_depl);
     }
-    return false;
+}
+
+void Grille::fusionnerBlocs(int ligne_depl, int colonne_depl, int ligne_fus, int colonne_fus) {
+    if (ligne_depl < 0 || colonne_depl < 0 || ligne_depl >= m_nbLignesCol || colonne_depl >= m_nbLignesCol) {
+        throw ExceptionLigneCol("Erreur methode fusionnerBlocs : ligne et/ou colonne de la case du bloc a deplacer pour la fusion invalide"
+                                "(< 0 ou >= nombre de lignes/colonnes de la grille");
+    }
+    else if (ligne_fus < 0 || colonne_fus < 0 || ligne_fus >= m_nbLignesCol || colonne_fus >= m_nbLignesCol) {
+        throw ExceptionLigneCol("Erreur methode fusionnerBlocs : ligne et/ou colonne de la case du bloc qui va recevoir la fusion invalide"
+                                "(< 0 ou >= nombre de lignes/colonnes de la grille");
+    }
+    else {
+        BlocNumerote * bloc_depl = (BlocNumerote*)getBloc(ligne_depl, colonne_depl), * bloc_fus = (BlocNumerote*)getBloc(ligne_fus, colonne_fus);
+
+        BlocNul * bloc_nul = new BlocNul(bloc_depl->getCoord(), m_tailleBlocs);
+
+        int new_valeur = 2 * bloc_fus->getValeur();
+
+        BlocNumerote * new_bloc = new BlocNumerote(bloc_fus->getCoord(), new_valeur, m_tailleBlocs);
+        setBloc(ligne_depl, colonne_depl, bloc_nul);
+        setBloc(ligne_fus, colonne_fus, new_bloc);
+        m_nbBlocs--;
+
+        m_score->modifierScore(new_valeur);
+    }
+}
+
+bool Grille::deplacerBloc(int ligne, int colonne, char direction, bool test_finie) {
+    if (ligne < 0 || colonne < 0 || ligne >= m_nbLignesCol || colonne >= m_nbLignesCol) {
+        throw ExceptionLigneCol("Erreur methode deplacerBloc : ligne et/ou colonne invalide (< 0 ou >= nombre de lignes/colonnes de la grille");
+    }
+    else {
+        int ligne_new = ligne, colonne_new = colonne, ligne_fus = ligne, colonne_fus = colonne;
+        // bool_bord nous permettra de savoir s'il y a un bloc numéroté entre le bloc à déplacer et le bord (on regarde un des bords en fonction de la
+        // direction.
+        // est_bloque nous permettra de savoir si le bloc à déplacer est cote à cote (suivant la direction choisie) avec un autre bloc numéroté ou
+        // s'il est au bord de la grille.
+        // Cela ne veut pas dire que le bloc ne pourra pas être déplacé car il peut être à coté d'un bloc numéroté d'une même valeur et être fusionné
+        bool bool_bord, est_bloque;
+        BlocNumerote * bloc_depl = (BlocNumerote*)getBloc(ligne, colonne); /* bloc_depl est le bloc à déplacer */
+        switch (direction) {
+            // Direction droite
+        case 'd' :
+            while (colonne_new + 1 < m_nbLignesCol && getBloc(ligne, colonne_new + 1)->getType() == 1) {
+                colonne_new++;
+            }
+            colonne_fus = colonne_new + 1;
+            bool_bord = colonne_fus >= m_nbLignesCol;
+            break;
+            // Direction gauche
+        case 'g' :
+            while (colonne_new - 1 >= 0 && getBloc(ligne, colonne_new - 1)->getType() == 1) {
+                colonne_new--;
+            }
+            colonne_fus = colonne_new - 1;
+            bool_bord = colonne_fus < 0;
+            break;
+            // Direction haut
+        case 'h' :
+            while (ligne_new - 1 >= 0 && getBloc(ligne_new - 1, colonne)->getType() == 1) {
+                ligne_new--;
+            }
+            ligne_fus = ligne_new - 1;
+            bool_bord = ligne_fus < 0;
+            break;
+            // Direction bas
+        case 'b' :
+            while (ligne_new + 1 < m_nbLignesCol && getBloc(ligne_new + 1, colonne)->getType() == 1) {
+                ligne_new++;
+            }
+            ligne_fus = ligne_new + 1;
+            bool_bord = ligne_fus >= m_nbLignesCol;
+            break;
+        }
+
+        est_bloque = ligne == ligne_new && colonne == colonne_new;
+
+        // Cas ou il n'y a aucun bloc numéroté entre le bloc à déplacer et le bord (dans la direction ou l'on déplace le bloc)
+        // Étant donne qu'on n'essaye jamais de déplacer les blocs au bord de la grille, si bool_bord vaut true alors on déplace forcément le bloc
+        // d'au moins une case
+        if (bool_bord) {
+            if (!test_finie) {
+                transfererBloc(ligne, colonne, ligne_new, colonne_new);
+            }
+            return true;
+        }
+
+        // Cas ou le bloc à déplacer est bloqué par un autre bloc numéroté
+        // Il n'y a pas besoin de vérifier que le bloc est bloqué par un autre bloc numéroté car on à vérifier avec le if précédent si il n'y avait
+        // que des cases libres entre le bloc à déplacer et le bord.
+        // S'il n'y a pas que des cases libres, cela signifie donc qu'il y a un bloc numéroté
+        else {
+            // On récupère le pointeur vers le bloc numéroté qui bloque le bloc à déplacer
+            BlocNumerote * bloc_fus = (BlocNumerote*)getBloc(ligne_fus, colonne_fus);
+
+            // Cas ou on peut fusionner le bloc à déplacer avec le bloc qui le bloque
+            if (bloc_fus->getValeur() == bloc_depl->getValeur()) {
+                if (!test_finie) {
+                    fusionnerBlocs(ligne, colonne, ligne_fus, colonne_fus);
+                }
+                return true;
+            }
+
+            // Cas ou on ne peut pas les fusionner, et il y'a au moins une case libre entre ces 2 blocs
+            // S'il ces deux blocs sont cotes à cotes (s'il n'y a pas de case libre entre les deux), il n'y a aucun déplacement à effectuer.
+            // C'est ce qu'on vérifie avec la condition du else if
+            else if (!est_bloque) {
+                if (!test_finie) {
+                    transfererBloc(ligne, colonne, ligne_new, colonne_new);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 bool Grille::deplacerBlocs(char direction, bool test_finie) {
