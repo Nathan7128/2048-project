@@ -7,7 +7,7 @@ Grille::Grille(Coordonnees coord, int taille, int nbLignesCol) {
         throw ExceptionCoordNeg("Erreur constructeur de la grille : coordonnees negatives");
     }
     else if (taille < 0) {
-        throw ExceptionCoordNeg("Erreur constructeur de la grille : taille (en pixel) de la grille negative");
+        throw ExceptionTailleObjet("Erreur constructeur de la grille : taille (en pixel) de la grille negative");
     }
     else if (nbLignesCol < 2) {
         throw ExceptionNbLignesCol("Erreur constructeur de la grille : impossible d'instancier une grille"

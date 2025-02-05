@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QThread>
 
 
 
@@ -44,6 +43,12 @@ MainWindow::MainWindow(QWidget *parent)
     // Initialisation de la grille et attribution du score
     m_grille->initialiserGrille();
     m_grille->setScore(m_score);
+}
+
+MainWindow::MainWindow(const MainWindow& m) {
+    ui = m.ui;
+    *m_grille = *m.m_grille;
+    *m_score = *m.m_score;
 }
 
 MainWindow::~MainWindow()
@@ -107,6 +112,16 @@ void MainWindow::keyPressEvent(QKeyEvent * event) {
 
         // utiliser KeyRelease pour déplacer les blocs seulement si on a relaché la touche
     }
+}
+
+MainWindow& MainWindow::operator=(const MainWindow& m) {
+    if (this != &m) {
+        delete m_grille;
+        delete m_score;
+        *m_grille = *m.m_grille;
+        *m_score = *m.m_score;
+    }
+    return *this;
 }
 
 

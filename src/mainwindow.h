@@ -32,12 +32,16 @@ private:
 
     // Méthodes publiques
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr); /* Constructeur par défaut */
+    MainWindow(const MainWindow& m); /* Constructeur de recopie */
     ~MainWindow();
 
     // Overriding
     void paintEvent(QPaintEvent * e); /* Redéfinition de la méthode permettant de dessiner la fenêtre */
     void keyPressEvent(QKeyEvent * event); /* Redéfinition de la méthode permettant de de capter les évènements du clavier */
+
+    // Surcharge des opérateurs
+    MainWindow& operator=(const MainWindow& m); /* Surcharge de l'opérateur =" */
 };
 
 
