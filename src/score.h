@@ -25,6 +25,8 @@ public:
     Score(Coordonnees coord = Coordonnees(), int largeur = 150, int hauteur = 80); /* Constructeur par défaut */
 
     void modifierScore(int valeur); /* Modifie le score en lui ajoutant une valeur passée en paramètre */
+    int getScore(); /* Renvoie le score actuel de la partie */
+    void reinitialiserScore(); /* Fixe le score à 0, utile lors d'une relance de partie */
     void dessiner(QPainter *p); /* Dessine le score dans la fenêtre principale */
 };
 

@@ -10,6 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     bloc.cpp \
+    blocbonus.cpp \
+    blocmalus.cpp \
     blocnul.cpp \
     blocnumerote.cpp \
     coordonnees.cpp \
@@ -20,6 +22,8 @@ SOURCES += \
 
 HEADERS += \
     bloc.h \
+    blocbonus.h \
+    blocmalus.h \
     blocnul.h \
     blocnumerote.h \
     coordonnees.h \

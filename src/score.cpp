@@ -13,6 +13,15 @@ void Score::modifierScore(int valeur) {
     m_score += valeur;
 }
 
+// Création d'un getteur pour obtenir le score en temps réel
+int Score::getScore(){
+    return m_score;
+}
+
+void Score::reinitialiserScore() {
+    m_score = 0;
+}
+
 void Score::dessiner(QPainter *p) {
     int x = m_coord.getX(), y = m_coord.getY();
 
