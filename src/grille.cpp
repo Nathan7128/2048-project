@@ -109,55 +109,66 @@ Coordonnees Grille::convertirCoordBloc(int i, int j) {
     return coordBloc;
 }
 
+#include <QDebug>
+
 void Grille::nouveauBlocNum() {
-    int n_alea = rand()%10, valeurBloc;
+    qDebug() << "Entrée dans nouveauBlocNum()";
+    int n_alea = rand() % 10, valeurBloc;
     // Déterminer la valeur aléatoire du bloc
     // Pour ce faire, on tire un nombre aléatoire compris entre 0 et 9 inclus, si on tire 0 (proba de 1/10) alors on créé un bloc de valeur 4, sinon 2.
     if (n_alea == 0) {
         valeurBloc = 4;
+        qDebug() << "n_alea == 0, valeurBloc = 4";
     }
     else {
         valeurBloc = 2;
+        qDebug() << "n_alea != 0, valeurBloc = 2";
     }
 
     // Choisir aléatoirement la case (ligne et colonne) ou va se trouver ce nouveau bloc
-    // On sait grâce à l'attribut "m_nbBlocs" combien il nous reste de case libre dans la grille. On va donc tirer un nombre aléatoire entre 1 et
+    // On sait grâce à l'attribut "m_nbBlocs" combien il nous reste de cases libres dans la grille. On va donc tirer un nombre aléatoire entre 1 et
     // (nombre de cases libres = nombre de blocs nuls dans la grille = m_nbLignesCol**2 - m_nbBlocs)
     // En fonction de ce nombre choisi, nous allons en déduire la ligne et la colonne ou placer le bloc. Ex : si on tire 2, alors on choisira la 2ème
     // case libre de la grille. Pour trier les cases, on les trie par ligne puis par colonne. Ex (pour une grille 4*4 : la 2ème case correspond à la
     // ligne 1 et colonne 2, la 15ème case correspond à la ligne 4 et la colonne 3. (on considère dans cet exemple que la case en haut à gauche
-    // correspond à la ligne 1 et la colonne 1, et non la ligne 0 et la colonne 0 (comme dans le cas ou l'on souhaite accéder aux éléments d'un
+    // correspond à la ligne 1 et la colonne 1, et non la ligne 0 et la colonne 0 (comme dans le cas où l'on souhaite accéder aux éléments d'un
     // tableau en C++).
-    int nbCasesDispo = m_nbLignesCol*m_nbLignesCol - m_nbBlocs;
-    n_alea = rand()%nbCasesDispo + 1; /* Nombre aléatoire entre 1 et et le nombre de cases disponibles */
+    int nbCasesDispo = m_nbLignesCol * m_nbLignesCol - m_nbBlocs;
+    n_alea = rand() % nbCasesDispo + 1; /* Nombre aléatoire entre 1 et le nombre de cases disponibles */
+    qDebug() << "Nombre de cases disponibles:" << nbCasesDispo << ", n_alea:" << n_alea;
 
     // On va maintenant déterminer à quelle ligne et quelle colonne correspond la "n_alea"ème case libre de la grille.
-    // C'est à dire, nous allons récupérer le pointeur de Bloc actuellement contenu dans la case ou l'on va placer le bloc.
+    // C'est à dire, nous allons récupérer le pointeur de Bloc actuellement contenu dans la case où l'on va placer le bloc.
     // Pour cela, nous allons procéder par itération : on traverse une à une les cases de la grille (en procédant ligne par ligne)
     // On détermine à chaque itération la ligne (i) et la colonne (j) de la case, et si la case contient un bloc nul, on incrémente un compteur de
     // blocs nuls initialisé à 0. Lorsque le compteur de blocs nuls aura atteint la valeur de "n_alea", on aura donc atteint la case libre souhaitée,
-    // et on connaitra la ligne et la colonne de cette case.
+    // et on connaîtra la ligne et la colonne de cette case.
     // Pour déterminer i, nous prenons la division entière du compteur de blocs parcourus "comptBlocs" par la taille de la grille.
     // Pour déterminer j, nous prenons le reste de la division du compteur de blocs parcourus "comptBlocs" par la taille de la grille.
     int comptBlocsNuls = 0, comptBlocs = 0, i = 0, j = 0;
     Bloc* bloc_temp;
     while (comptBlocsNuls < n_alea) {
-        i = comptBlocs/m_nbLignesCol;
-        j = comptBlocs%m_nbLignesCol;
+        i = comptBlocs / m_nbLignesCol;
+        j = comptBlocs % m_nbLignesCol;
         bloc_temp = getBloc(i, j);
         if (bloc_temp->getType() == 1) {
             comptBlocsNuls++;
+            qDebug() << "Bloc nul trouvé à (" << i << "," << j << "), compteur:" << comptBlocsNuls;
         }
         comptBlocs++;
     }
+    qDebug() << "Position choisie pour nouveau bloc: ligne" << i << "colonne" << j;
 
-    // La variable bloc_temp est donc le pointeur de Bloc situé dans la case ou l'on veut placer le bloc.
+    // La variable bloc_temp est donc le pointeur de Bloc situé dans la case où l'on veut placer le bloc.
     Coordonnees coord = convertirCoordBloc(i, j);
-    BlocNumerote * new_bloc;
-    new_bloc = new BlocNumerote(coord, valeurBloc, m_tailleBlocs);
+    qDebug() << "Coordonnées du bloc:" << coord.getX() << coord.getY();
+
+    BlocNumerote* new_bloc = new BlocNumerote(coord, valeurBloc, m_tailleBlocs);
     setBloc(i, j, new_bloc);
     m_nbBlocs++;
+    qDebug() << "Nouveau bloc numérique créé avec valeur:" << valeurBloc << ", m_nbBlocs maintenant:" << m_nbBlocs;
 }
+
 
 void Grille::nouveauBlocBonus() {
     int n_alea = rand()%12, valeurBloc;
@@ -268,6 +279,7 @@ void Grille::nouveauBlocMalus() {
 }
 
 void Grille::initialiserGrille() {
+    qDebug() << "Initialisation de la grille...";
     Coordonnees coord;
     BlocNul * bloc_nul;
     for (int i = 0; i < m_nbLignesCol; i++) {
@@ -275,10 +287,13 @@ void Grille::initialiserGrille() {
             coord = convertirCoordBloc(i, j);
             bloc_nul = new BlocNul(coord, m_tailleBlocs);
             setBloc(i, j, bloc_nul);
+            qDebug() << "Bloc nul créé à (" << i << "," << j << ") avec coord:" << coord.getX() << coord.getY();
         }
     }
+    qDebug() << "Création des deux nouveaux blocs numériques...";
     nouveauBlocNum();
     nouveauBlocNum();
+    qDebug() << "Initialisation de la grille terminée.";
 }
 
 void Grille::transfererBloc(int i_old, int j_old, int i_new, int j_new) {
@@ -294,42 +309,6 @@ void Grille::transfererBloc(int i_old, int j_old, int i_new, int j_new) {
     setBloc(i_new, j_new, bloc_depl);
 }
 
-/*
-void Grille::fusionnerBlocs(int i_bloc_depl, int j_bloc_depl, int i_bloc_fus, int j_bloc_fus) {
-    Bloc* bloc_depl = getBloc(i_bloc_depl, j_bloc_depl);
-    Bloc* bloc_fus = getBloc(i_bloc_fus, j_bloc_fus);
-
-    int type_bloc_depl = bloc_depl->getType();
-    int type_bloc_fus = bloc_fus->getType();
-
-    // Vérification des types de blocs pour déterminer le traitement à effectuer
-    if (type_bloc_depl == 2 && type_bloc_fus == 3) {
-        // Bloc numéroté fusionne avec un bloc bonus
-        fusionnerBlocsNumeroteBonus(i_bloc_depl, j_bloc_depl, i_bloc_fus, j_bloc_fus);
-    } else if (type_bloc_depl == 3 && type_bloc_fus == 2) {
-        // Bloc bonus fusionne avec un bloc numéroté
-        fusionnerBlocsNumeroteBonus(i_bloc_fus, j_bloc_fus, i_bloc_depl, j_bloc_depl);
-    } else if (type_bloc_depl == 2 && type_bloc_fus == 4) {
-        // Bloc numéroté fusionne avec un malus
-        fusionnerBlocsNumeroteMalus(i_bloc_depl, j_bloc_depl, i_bloc_fus, j_bloc_fus);
-    } else if (type_bloc_depl == 4 && type_bloc_fus == 2) {
-        // Bloc malus fusionne avec un bloc numéroté
-        fusionnerBlocsNumeroteMalus(i_bloc_fus, j_bloc_fus, i_bloc_depl, j_bloc_depl);
-    } else if (type_bloc_depl == 3 && type_bloc_fus == 3) {
-        // Fusion de deux blocs bonus
-        fusionnerBlocsBonusBonus(i_bloc_depl, j_bloc_depl, i_bloc_fus, j_bloc_fus);
-    } else if (type_bloc_depl == 4 && type_bloc_fus == 4) {
-        // Fusion de deux blocs malus
-        fusionnerBlocsMalusMalus(i_bloc_depl, j_bloc_depl, i_bloc_fus, j_bloc_fus);
-    } else if ((type_bloc_depl == 3 && type_bloc_fus == 4) || (type_bloc_depl == 4 && type_bloc_fus == 3)) {
-        // Fusion d'un bloc bonus et d'un malus, peu importe l'ordre
-        fusionnerBlocsBonusMalus(i_bloc_depl, j_bloc_depl, i_bloc_fus, j_bloc_fus);
-    } else if (type_bloc_depl == 2 && type_bloc_fus == 2) {
-        // Fusion de deux blocs numérotés
-        fusionnerBlocsNumeroteNumerote(i_bloc_depl, j_bloc_depl, i_bloc_fus, j_bloc_fus);
-    }
-    m_nbBlocs--;  // Une fusion libère une case dans la grille
-}*/
 
 // Fusionner deux blocs numérotés
 void Grille::fusionnerBlocsNumeroteNumerote(int i_bloc_depl, int j_bloc_depl, int i_bloc_fus, int j_bloc_fus, char direction) {
@@ -769,15 +748,16 @@ bool Grille::deplacerBlocs(char direction, bool test_finie) {
 
     // Générer un nouveau bloc si des déplacements ont eu lieu
     if (compt_depl > 0 && !test_finie) {
-        int n_alea = rand() % 3;
-        if (n_alea == 0) {
+        int n_alea = rand() % 30;
+        if (n_alea == 0) { // 1/30 chance
+            nouveauBlocBonus();
+        } else if (n_alea == 1) { // 1/30 chance
             nouveauBlocMalus();
-        } else if (n_alea == 1) {
-            nouveauBlocMalus();
-        } else {
+        } else { // 28/30 chance
             nouveauBlocNum();
         }
     }
+
 
     // Réactiver la fusion pour tous les blocs à la fin du mouvement
     if (!test_finie) {

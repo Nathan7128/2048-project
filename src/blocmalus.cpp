@@ -58,7 +58,7 @@ BlocMalus::BlocMalus(Coordonnees coord, int valeur, int taille_bloc):Bloc(coord,
 }
 
 
-int BlocMalus::getValeur() {
+int BlocMalus::getValeur() const {
     return m_valeur;
 }
 

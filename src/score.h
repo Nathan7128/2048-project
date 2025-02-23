@@ -9,7 +9,7 @@
 
 
 
-// Cette classe permet d'implémenter le score d'une partie, qui augmente à chaque fusion de 2 blocs de la grille.
+// Cette classe permet d'implémenter le score d'une partie, qui augmente (ou diminue) à chaque fusion de 2 blocs de la grille.
 // Le score est affiché dans la fenêtre principale.
 // Telle qu'il est implémenté, le dessin du score dans la fenêtre principale est composé d'un rectangle à l'intérieur duquel se trouvent le mot "score" et la valeur du score affichés.
 class Score {

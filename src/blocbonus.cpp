@@ -73,7 +73,7 @@ BlocBonus::BlocBonus(Coordonnees coord, int valeur, int taille_bloc):Bloc(coord,
     }
 }
 
-int BlocBonus::getValeur() {
+int BlocBonus::getValeur() const {
     return m_valeur;
 }
 

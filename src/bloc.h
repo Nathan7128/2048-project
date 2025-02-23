@@ -27,6 +27,9 @@ public :
     int getType();
     Coordonnees getCoord();
     bool getPeutFusionner(); /* Retourne l'état de m_peutFusionner */
+    // Déclaration de la méthode virtuelle getValeur()
+    virtual int getValeur() const;
+
 
     // Mutateurs
     void setCoord(Coordonnees coord);

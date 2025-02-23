@@ -23,7 +23,7 @@ public :
     ~BlocNumerote() {};
 
     // Accesseurs
-    int getValeur();
+    virtual int getValeur() const ;
 
     void dessiner(QPainter *p); /* Dessine le bloc numéroté dans la grille */
 };

@@ -16,9 +16,13 @@ SOURCES += \
     blocnumerote.cpp \
     coordonnees.cpp \
     grille.cpp \
+    identification.cpp \
     main.cpp \
     mainwindow.cpp \
-    score.cpp
+    record.cpp \
+    recordgeneral.cpp \
+    score.cpp \
+    utilisateur.cpp
 
 HEADERS += \
     bloc.h \
@@ -28,8 +32,12 @@ HEADERS += \
     blocnumerote.h \
     coordonnees.h \
     grille.h \
+    identification.h \
     mainwindow.h \
-    score.h
+    record.h \
+    recordgeneral.h \
+    score.h \
+    utilisateur.h
 
 FORMS += \
     mainwindow.ui

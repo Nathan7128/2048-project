@@ -29,3 +29,8 @@ bool Bloc::getPeutFusionner() {
 void Bloc::setPeutFusionner(bool peutFusionner) {
     m_peutFusionner = peutFusionner;
 }
+
+// Implémentation de getValeur() pour la classe de base
+int Bloc::getValeur() const {
+    return 0;
+}

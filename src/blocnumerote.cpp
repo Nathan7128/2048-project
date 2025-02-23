@@ -89,8 +89,7 @@ BlocNumerote::BlocNumerote(Coordonnees coord, int valeur, int taille_bloc):Bloc(
     }
 }
 
-
-int BlocNumerote::getValeur() {
+int BlocNumerote::getValeur() const {
     return m_valeur;
 }
 
